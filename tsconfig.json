@@ -20,7 +20,7 @@
     "suppressImplicitAnyIndexErrors": true,
     "target": "esnext",
     "typeRoots": ["./node_modules/@types", "./typings"],
-    "types": ["react"]
+    "types": ["react", "node"]
   },
   "exclude": ["node_modules", "build", "tsconfig.json", "./**/*.js"]
 }

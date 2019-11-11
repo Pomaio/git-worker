@@ -1,39 +1,20 @@
 import {
   Collapse,
   Grid,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
-  ListItemText,
   ListItemSecondaryAction,
-  IconButton
+  ListItemText
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import Icon from '@material-ui/core/Icon';
+import { observer } from 'mobx-react-lite';
 
 import styled from 'styled-components';
-
-const ElementList = () => {
-  const list = (localStorage.getItem('URLS') || '').split('/..../');
-  return (
-    <List component="div" disablePadding>
-      {list.map(elem => (
-        <ElementRow label={elem} />
-      ))}
-    </List>
-  );
-};
-const ElementRow = ({ label }: any) => (
-  <ListItem button>
-    <ListItemText primary={label} />
-    <ListItemSecondaryAction>
-      <IconButton edge="end" aria-label="delete">
-        <Icon>delete</Icon>
-      </IconButton>
-    </ListItemSecondaryAction>
-  </ListItem>
-);
+import { StoresContext } from '~/core/stores';
 
 const Block = styled('div')`
   padding-top: 30px;
@@ -49,7 +30,20 @@ const Block = styled('div')`
   }
 `;
 
-export const CollapseRow = () => {
+interface ListProps {
+  elements: string[] | undefined;
+}
+
+export const CollapseRow = observer(() => {
+  const { infoStore } = useContext(StoresContext);
+  const { collectionUrl } = infoStore;
+  console.log('render');
+  useEffect(() => {
+    infoStore.fetchUrls();
+  }, []);
+  useEffect(() => {
+    console.log('renderURL');
+  }, [collectionUrl]);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -70,9 +64,28 @@ export const CollapseRow = () => {
           {open ? <Icon>expand_less</Icon> : <Icon>expand_more</Icon>}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <ElementList />
+          <ElementList elements={collectionUrl} />
         </Collapse>
       </Grid>
     </Block>
   );
+});
+
+const ElementList = ({ elements }: ListProps) => {
+  return elements == [''] ? null : (
+    <List component="div" disablePadding>
+      {elements &&
+        elements.map((elem, i) => <ElementRow label={elem} key={elem + i} />)}
+    </List>
+  );
 };
+const ElementRow = ({ label }: any) => (
+  <ListItem button>
+    <ListItemText primary={label} />
+    <ListItemSecondaryAction>
+      <IconButton edge="end" aria-label="delete">
+        <Icon>delete</Icon>
+      </IconButton>
+    </ListItemSecondaryAction>
+  </ListItem>
+);

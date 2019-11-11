@@ -112,6 +112,11 @@ const plugins = [
   new MiniCssExtractPlugin({
     filename: '[name].css',
     chunkFilename: '[id].css'
+  }),
+  new webpack.ProvidePlugin({
+    BrowserFS: 'bfsGlobal',
+    process: 'processGlobal',
+    Buffer: 'bufferGlobal'
   })
 ];
 
