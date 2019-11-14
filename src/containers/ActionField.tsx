@@ -5,10 +5,10 @@ import {
   BottomNavigationAction,
   Box,
   Icon,
-  TextField,
   Typography
 } from '@material-ui/core';
 import styled from 'styled-components';
+import { CommonForm } from '~/components/CommonForm';
 
 const StyledBox = styled(Box)`
   margin: 30px 0;
@@ -44,7 +44,7 @@ export const ActionField = () => {
           icon={<Icon>format_indent_increase</Icon>}
         />
       </BottomNavigation>
-      <TextField
+      <CommonForm
         id="outlined-multiline-static"
         label="Скрипт"
         multiline

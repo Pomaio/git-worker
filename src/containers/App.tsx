@@ -5,7 +5,6 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { StoresContext } from '~/core/stores';
 import { ActionField } from './ActionField';
-import { AdressField } from './AdressField';
 import { AuthField } from './AuthField';
 import { CommitField } from './CommitField';
 
@@ -17,30 +16,34 @@ export const App = hot(() => {
   const { logicStore } = useContext(StoresContext);
   return (
     <>
-      <Button variant="contained" onClick={() => logicStore.writeRepo()}>
-        Write
+      <Button variant="contained" onClick={() => logicStore.gitPull()}>
+        Pull
       </Button>
       <Button variant="contained" onClick={() => logicStore.readRepo()}>
-        Read
+        ShowContent
       </Button>
-      <Button variant="contained" onClick={() => logicStore.fetch()}>
-        Fetch
+      <Button variant="contained" onClick={() => logicStore.writeRepo()}>
+        Add txt file
       </Button>
-      <Button variant="contained" onClick={() => logicStore.addTest()}>
-        AddFolder
-      </Button>
-      <Button variant="contained" onClick={() => logicStore.commit()}>
+      <Button variant="contained" onClick={() => logicStore.gitCommit()}>
         Commit
       </Button>
-      <Button variant="contained" onClick={() => logicStore.push()}>
+      <Button variant="contained" onClick={() => logicStore.gitPush()}>
         Push
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.cleanFolder()}>
+        CleanFolder
       </Button>
       <StyledContainer maxWidth="md">
         <Grid container direction="column">
-          <AdressField />
           <AuthField />
           <ActionField />
           <CommitField />
+          <Grid container spacing={1} alignItems="flex-end" justify="flex-end">
+            <Button variant="outlined" color="secondary" size="large">
+              GO
+            </Button>
+          </Grid>
         </Grid>
       </StyledContainer>
     </>

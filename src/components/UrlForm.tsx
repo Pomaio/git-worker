@@ -1,25 +1,23 @@
-import { Grid, Icon, TextField } from '@material-ui/core';
+import { Grid, Icon } from '@material-ui/core';
 import React, { useContext, useState } from 'react';
 import { StoresContext } from '~/core/stores';
+import { CommonForm } from './CommonForm';
 
-export const FormComponent = () => {
+export const UrlForm = () => {
   const { infoStore } = useContext(StoresContext);
   const [value, setValue] = useState('');
 
   return (
-    <Grid container spacing={1} alignItems="flex-end" justify="flex-start">
+    <Grid container spacing={1} alignItems="flex-end" justify="space-around">
       <Grid item xs={11}>
-        <TextField
+        <CommonForm
           label="Git URL"
           fullWidth
-          onChange={e => {
-            setValue(e.target.value);
-          }}
+          setStoreValue={setValue}
           margin="none"
-          name="qwert"
         />
       </Grid>
-      <Grid item xs={1}>
+      <Grid item>
         <Icon
           style={{ fontSize: 30 }}
           onClick={() => {

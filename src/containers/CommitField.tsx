@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { Box, Typography, Grid, TextField, Icon } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 import styled from 'styled-components';
+import { CommonForm } from '~/components/CommonForm';
 
 const StyledBox = styled(Box)`
   margin: 30px 0;
@@ -17,14 +18,14 @@ export const CommitField = () => {
         Коммит:
       </Typography>
       <Grid container alignItems="flex-end" justify="flex-start">
-        <TextField
+        {/* <CommonForm
           label="Название коммита"
           fullWidth
           margin="normal"
           name="qwert"
-        />
+        /> */}
 
-        <TextField
+        <CommonForm
           id="outlined-multiline-static"
           label="Сообщение коммита"
           multiline

@@ -2,6 +2,11 @@ import { action, observable } from 'mobx';
 
 export class InfoStore {
   @observable
+  login?: string;
+  @observable
+  password?: string;
+
+  @observable
   urlsCollection?: string[];
 
   @action
@@ -36,6 +41,15 @@ export class InfoStore {
     if (urlsCollection) {
       localStorage.setItem('URLS', JSON.stringify(urlsCollection));
     }
+  }
+
+  @action
+  setLogin(login?: string) {
+    if (login && login !== '') this.login = login;
+  }
+  @action
+  setPassword(password?: string) {
+    if (password && password !== '') this.password = password;
   }
 
   @action

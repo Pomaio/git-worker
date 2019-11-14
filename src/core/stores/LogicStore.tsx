@@ -1,5 +1,6 @@
-import { clone, commit, plugins, push, add } from 'isomorphic-git';
+import { add, clone, commit, plugins, push } from 'isomorphic-git';
 import { action } from 'mobx';
+const path = require('path');
 
 import * as fs from 'fs';
 
@@ -11,8 +12,47 @@ const password = 'Mju76yui';
 const url = 'http://gitlab.ds.local/g.marshinov/test';
 
 export class LogicStore {
+  // тут пока не создается папки нужно посылать что-то на вход и делать dir + input
   @action
-  async fetch() {
+  async addDirTest() {
+    fs.mkdir(dir, { recursive: true }, err => {
+      if (err) throw err;
+    });
+  }
+  @action
+  async cleanFolder() {
+    fs.promises
+      .rmdir(dir)
+      .then(() => console.log('good'), e => console.log('error', e))
+      .finally(() => console.log('finish'));
+    // fs.readdir(dir, function(err, files) {
+    //   if (err) throw err;
+    // for (const file of files) {
+    //   if (file.charAt(0) === '.') {
+    //     fs.rmdir(path.join(dir, file), err => {
+    //       if (err) throw err;
+    //     });
+    //   } else {
+    //     fs.unlink(path.join(dir, file), err => {
+    //       if (err) throw err;
+    //     });
+    //   }
+    // }
+    // });
+  }
+  @action
+  async gitCommit() {
+    await commit({
+      dir,
+      author: {
+        name: 'Mr. DevOps',
+        email: 'g.marshinov@deltasolutions.ru'
+      },
+      message: 'Added the a .txt file'
+    });
+  }
+  @action
+  async gitPull() {
     console.log('fetch');
     await clone({
       dir,
@@ -21,10 +61,20 @@ export class LogicStore {
       url,
       ref: 'master',
       singleBranch: true,
-      depth: 10
+      depth: 1
     })
-      .then(v => console.log('good', v), e => console.log('error', e))
+      .then(() => console.log('good'), e => console.log('error', e))
       .finally(() => console.log('finish'));
+  }
+  @action
+  async gitPush() {
+    await push({
+      dir,
+      url,
+      username,
+      password,
+      ref: 'master'
+    });
   }
 
   @action
@@ -43,38 +93,10 @@ export class LogicStore {
       function(err) {
         if (err) throw err;
         add({ dir, filepath: 'test.txt' }).then(
-          v => console.log('good', v),
+          () => console.log('good'),
           e => console.log('error', e)
         );
       }
     );
-  }
-  // тут пока не создается папки нужно посылать что-то на вход и делать dir + input
-  @action
-  async addTest() {
-    fs.mkdir(dir, { recursive: true }, err => {
-      if (err) throw err;
-    });
-  }
-  @action
-  async commit() {
-    await commit({
-      dir,
-      author: {
-        name: 'Mr. Test',
-        email: 'mrtest@example.com'
-      },
-      message: 'Added the a .txt file'
-    });
-  }
-  @action
-  async push() {
-    await push({
-      dir,
-      url,
-      username,
-      password,
-      ref: 'master'
-    });
   }
 }
