@@ -17,8 +17,23 @@ export const App = hot(() => {
   const { logicStore } = useContext(StoresContext);
   return (
     <>
-      <Button variant="contained" onClick={() => logicStore.fetchRepo()}>
-        Test
+      <Button variant="contained" onClick={() => logicStore.writeRepo()}>
+        Write
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.readRepo()}>
+        Read
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.fetch()}>
+        Fetch
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.addTest()}>
+        AddFolder
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.commit()}>
+        Commit
+      </Button>
+      <Button variant="contained" onClick={() => logicStore.push()}>
+        Push
       </Button>
       <StyledContainer maxWidth="md">
         <Grid container direction="column">

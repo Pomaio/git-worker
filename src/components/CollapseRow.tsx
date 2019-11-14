@@ -30,20 +30,12 @@ const Block = styled('div')`
   }
 `;
 
-interface ListProps {
-  elements: string[] | undefined;
-}
-
 export const CollapseRow = observer(() => {
   const { infoStore } = useContext(StoresContext);
-  const { collectionUrl } = infoStore;
-  console.log('render');
+  const { urlsCollection } = infoStore;
   useEffect(() => {
     infoStore.fetchUrls();
   }, []);
-  useEffect(() => {
-    console.log('renderURL');
-  }, [collectionUrl]);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -64,26 +56,37 @@ export const CollapseRow = observer(() => {
           {open ? <Icon>expand_less</Icon> : <Icon>expand_more</Icon>}
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <ElementList elements={collectionUrl} />
+          <List component="div" disablePadding>
+            {urlsCollection &&
+              urlsCollection.map((v, i) => (
+                <ElementRow
+                  delete={v => infoStore.deleteUrl(v)}
+                  label={v}
+                  key={v + i}
+                />
+              ))}
+          </List>
         </Collapse>
       </Grid>
     </Block>
   );
 });
 
-const ElementList = ({ elements }: ListProps) => {
-  return elements == [''] ? null : (
-    <List component="div" disablePadding>
-      {elements &&
-        elements.map((elem, i) => <ElementRow label={elem} key={elem + i} />)}
-    </List>
-  );
-};
-const ElementRow = ({ label }: any) => (
+interface RowProps {
+  delete?: any;
+  label: string;
+  key?: any;
+}
+
+const ElementRow = ({ label, ...anyProp }: RowProps) => (
   <ListItem button>
     <ListItemText primary={label} />
     <ListItemSecondaryAction>
-      <IconButton edge="end" aria-label="delete">
+      <IconButton
+        edge="end"
+        aria-label="delete"
+        onClick={() => anyProp.delete(label)}
+      >
         <Icon>delete</Icon>
       </IconButton>
     </ListItemSecondaryAction>

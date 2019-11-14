@@ -2,48 +2,44 @@ import { action, observable } from 'mobx';
 
 export class InfoStore {
   @observable
-  collectionUrl?: string[];
-
-  des = '/..../';
+  urlsCollection?: string[];
 
   @action
-  async deletUrl(url: string) {
-    const r = await (this.collectionUrl &&
-      this.collectionUrl.filter(elem => elem === url));
-    this.setLocalStorage(r);
-    this.setCollectionUrl(r);
+  async deleteUrl(url: string) {
+    const r = (this.urlsCollection || []).filter(elem => elem !== url);
+    if (r && r !== []) {
+      this.setLocalStorage(r);
+      this.setUrlsCollection(r);
+    }
   }
 
   @action
   async fetchUrls() {
-    const r = await localStorage.getItem('URLS');
-    if (r) this.setCollectionUrl(r.split(this.des));
+    const r = localStorage.getItem('URLS');
+    if (r) this.setUrlsCollection(JSON.parse(r));
   }
+
   @action
   async pushUrl(url: string) {
-    const r = await this.collectionUrl;
-    if (r && url != '') {
-      r.push(url);
-      this.setLocalStorage(r);
-      this.setCollectionUrl(r);
-    } else {
-      this.setLocalStorage([url]);
-      this.setCollectionUrl([url]);
+    if (url !== '') {
+      this.urlsCollection = [...(this.urlsCollection || []), url];
+      this.setLocalStorage(this.urlsCollection);
     }
   }
   @action
   reset() {
-    this.collectionUrl = undefined;
+    console.log('reset');
+    this.urlsCollection = undefined;
+  }
+  @action
+  setLocalStorage(urlsCollection?: string[]) {
+    if (urlsCollection) {
+      localStorage.setItem('URLS', JSON.stringify(urlsCollection));
+    }
   }
 
   @action
-  setCollectionUrl(collectionUrl?: string[]) {
-    this.collectionUrl = collectionUrl;
-  }
-  @action
-  setLocalStorage(collectionUrl?: string[]) {
-    if (collectionUrl) {
-      localStorage.setItem('URLS', collectionUrl.join(this.des));
-    }
+  setUrlsCollection(urlsCollection?: string[]) {
+    this.urlsCollection = [...(urlsCollection || [])];
   }
 }

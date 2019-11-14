@@ -5,6 +5,8 @@ import { setConfig } from 'react-hot-loader';
 import { App } from './containers/App';
 import { patchLogs } from './patchLogs';
 
+const BrowserFS = require('browserfs');
+
 import { configure } from 'mobx';
 import './styleReset.css';
 
@@ -14,11 +16,11 @@ configure({
 
 setConfig({ trackTailUpdates: false });
 
-const fs = BrowserFS.BFSRequire('fs');
-BrowserFS.configure({ fs: 'IndexedDB', options: {} }, function(err) {
-  if (err) return console.log(err);
-  window.fs = BrowserFS.BFSRequire('fs');
-  git.plugins.set('fs', window.fs);
+// browserFS setting
+BrowserFS.install(window);
+BrowserFS.configure({ fs: 'InMemory' }, function(err) {
+  if (err) throw err;
+  // console.log('ye', BrowserFS);
 });
 
 patchLogs();

@@ -1,9 +1,7 @@
 import { Box, Typography } from '@material-ui/core';
-import { observer } from 'mobx-react-lite';
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { FormComponent } from '~/components/FormComponent';
-import { StoresContext } from '~/core/stores';
 import { CollapseRow } from '../components/CollapseRow';
 
 const StyledBox = styled(Box)`
@@ -21,9 +19,6 @@ const StyledBox = styled(Box)`
 `;
 
 export const AdressField = () => {
-  const { infoStore } = useContext(StoresContext);
-  useEffect(() => infoStore.reset(), []);
-
   return (
     <StyledBox>
       <Typography variant="h5" component="h5">
