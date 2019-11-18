@@ -3,6 +3,8 @@ import { action } from 'mobx';
 const path = require('path');
 
 import * as fs from 'fs';
+// const fs = require('fs');
+// const fsp = require('fs').promises;
 
 plugins.set('fs', fs);
 
@@ -10,6 +12,7 @@ const dir = 'repo';
 const username = 'g.marshinov';
 const password = 'Mju76yui';
 const url = 'http://gitlab.ds.local/g.marshinov/test';
+// console.log(fsp);
 
 export class LogicStore {
   // тут пока не создается папки нужно посылать что-то на вход и делать dir + input

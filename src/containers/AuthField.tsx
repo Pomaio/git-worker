@@ -1,25 +1,14 @@
 import { Box, Grid, Typography } from '@material-ui/core';
 import React, { useContext } from 'react';
-import styled from 'styled-components';
 import { CollapseRow } from '~/components/CollapseRow';
 import { CommonForm } from '~/components/CommonForm';
 import { UrlForm } from '~/components/UrlForm';
 import { StoresContext } from '~/core/stores';
 
-const StyledBox = styled(Box)`
-  margin: 30px 0;
-
-  .MuiBox-root {
-    margin: 0;
-  }
-  .MuiTypography-root {
-    padding-bottom: 20px;
-  }
-`;
 export const AuthField = () => {
   const { infoStore } = useContext(StoresContext);
   return (
-    <StyledBox>
+    <Box>
       <Typography variant="h5" component="h5">
         Данные авторизации и список Url
       </Typography>
@@ -45,6 +34,6 @@ export const AuthField = () => {
       </Grid>
       <CollapseRow />
       <UrlForm />
-    </StyledBox>
+    </Box>
   );
 };

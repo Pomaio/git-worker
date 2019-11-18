@@ -2,6 +2,8 @@ import { action, observable } from 'mobx';
 
 export class InfoStore {
   @observable
+  commitInfo?: string;
+  @observable
   login?: string;
   @observable
   password?: string;
@@ -37,6 +39,10 @@ export class InfoStore {
     this.urlsCollection = undefined;
   }
   @action
+  setCommitInfo(commitInfo?: string) {
+    this.commitInfo = commitInfo;
+  }
+  @action
   setLocalStorage(urlsCollection?: string[]) {
     if (urlsCollection) {
       localStorage.setItem('URLS', JSON.stringify(urlsCollection));
@@ -51,7 +57,6 @@ export class InfoStore {
   setPassword(password?: string) {
     if (password && password !== '') this.password = password;
   }
-
   @action
   setUrlsCollection(urlsCollection?: string[]) {
     this.urlsCollection = [...(urlsCollection || [])];

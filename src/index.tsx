@@ -17,6 +17,7 @@ configure({
 setConfig({ trackTailUpdates: false });
 
 // browserFS setting
+console.log(BrowserFS);
 BrowserFS.install(window);
 BrowserFS.configure({ fs: 'InMemory' }, function(err) {
   if (err) throw err;

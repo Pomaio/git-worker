@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 const absolutize = v => path.join(__dirname, v);
 
@@ -117,7 +118,8 @@ const plugins = [
     BrowserFS: 'bfsGlobal',
     process: 'processGlobal',
     Buffer: 'bufferGlobal'
-  })
+  }),
+  new MonacoWebpackPlugin()
 ];
 
 module.exports = {

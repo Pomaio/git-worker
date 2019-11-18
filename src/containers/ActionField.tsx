@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import {
   BottomNavigation,
@@ -7,23 +7,14 @@ import {
   Icon,
   Typography
 } from '@material-ui/core';
-import styled from 'styled-components';
 import { CommonForm } from '~/components/CommonForm';
-
-const StyledBox = styled(Box)`
-  margin: 30px 0;
-  .MuiBox-root {
-    margin: 0;
-  }
-  .MuiTypography-root {
-    padding-bottom: 20px;
-  }
-`;
+import { RegularForm } from '~/components/RegularForm';
+import { EditorField } from '~/components/EditorForm';
 
 export const ActionField = () => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState('regxp');
   return (
-    <StyledBox>
+    <Box>
       <Typography variant="h5" component="h5">
         Варианты изменения
       </Typography>
@@ -34,24 +25,47 @@ export const ActionField = () => {
         }}
         showLabels
       >
-        <BottomNavigationAction label="Что-то" icon={<Icon>restore</Icon>} />
         <BottomNavigationAction
           label="Регулярка"
+          value="regxp"
           icon={<Icon>clear_all</Icon>}
         />
         <BottomNavigationAction
           label="Скрипт"
+          value="script"
           icon={<Icon>format_indent_increase</Icon>}
         />
+        <BottomNavigationAction
+          label="Тестовое действие"
+          value="test"
+          icon={<Icon>restore</Icon>}
+        />
       </BottomNavigation>
-      <CommonForm
-        id="outlined-multiline-static"
-        label="Скрипт"
-        multiline
-        fullWidth
-        margin="normal"
-        variant="outlined"
-      />
-    </StyledBox>
+      {value === 'regxp' && <RegularForm />}
+      {value === 'script' && (
+        <Box
+          border={'2px solid #dedede'}
+          borderRadius={'5px'}
+          paddingTop={'15px'}
+        >
+          <EditorField
+            value={'//Начните писать свой код....'}
+            onChange={v => {
+              //console.log(v);
+            }}
+            formating={true}
+          />
+        </Box>
+      )}
+      {value === 'test' && (
+        <CommonForm
+          fullWidth
+          label="В корень проекта будет добавлен файл test.txt"
+          margin="normal"
+          disabled
+          variant="outlined"
+        />
+      )}
+    </Box>
   );
 };
