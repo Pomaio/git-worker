@@ -1,105 +1,88 @@
 import { add, clone, commit, plugins, push } from 'isomorphic-git';
-import { action } from 'mobx';
-const path = require('path');
 
 import * as fs from 'fs';
-// const fs = require('fs');
-// const fsp = require('fs').promises;
+const fsp = fs.promises;
+
+// const path = require('path');
+// import { rimraf } from 'rimraf';
+
+import { action } from 'mobx';
+import { InfoStore } from './InfoStore';
 
 plugins.set('fs', fs);
 
 const dir = 'repo';
-const username = 'g.marshinov';
-const password = 'Mju76yui';
-const url = 'http://gitlab.ds.local/g.marshinov/test';
-// console.log(fsp);
+// const username = 'g.marshinov';
+// const password = 'Mju76yui';
+// const url = 'http://gitlab.ds.local/g.marshinov/test';
+// const name = 'Mju76yui';
+// const email = 'g.marshinov@deltasolutions.ru';
 
-export class LogicStore {
-  // тут пока не создается папки нужно посылать что-то на вход и делать dir + input
+export class LogicStore extends InfoStore {
   @action
   async addDirTest() {
-    fs.mkdir(dir, { recursive: true }, err => {
-      if (err) throw err;
-    });
+    await fsp.mkdir(dir, { recursive: true });
   }
   @action
   async cleanFolder() {
-    fs.promises
-      .rmdir(dir)
-      .then(() => console.log('good'), e => console.log('error', e))
-      .finally(() => console.log('finish'));
-    // fs.readdir(dir, function(err, files) {
-    //   if (err) throw err;
-    // for (const file of files) {
-    //   if (file.charAt(0) === '.') {
-    //     fs.rmdir(path.join(dir, file), err => {
-    //       if (err) throw err;
-    //     });
-    //   } else {
-    //     fs.unlink(path.join(dir, file), err => {
-    //       if (err) throw err;
-    //     });
-    //   }
-    // }
-    // });
+    (fs as any).vol.reset();
   }
   @action
   async gitCommit() {
-    await commit({
-      dir,
+    const i = {
       author: {
-        name: 'Mr. DevOps',
-        email: 'g.marshinov@deltasolutions.ru'
+        name: this.username || this.login,
+        email: this.email
       },
       message: 'Added the a .txt file'
+    };
+    await commit({
+      dir,
+      ...i
     });
   }
   @action
-  async gitPull() {
-    console.log('fetch');
+  async gitPull(url: string) {
+    const i = {
+      username: this.login,
+      password: this.password
+    };
     await clone({
       dir,
-      username,
-      password,
       url,
       ref: 'master',
       singleBranch: true,
-      depth: 1
-    })
-      .then(() => console.log('good'), e => console.log('error', e))
-      .finally(() => console.log('finish'));
+      depth: 1,
+      ...i
+    });
   }
   @action
-  async gitPush() {
+  async gitPush(url: string) {
+    const i = {
+      username: this.login,
+      password: this.password
+    };
     await push({
       dir,
       url,
-      username,
-      password,
-      ref: 'master'
+      ref: 'master',
+      ...i
     });
   }
 
   @action
   async readRepo() {
-    fs.readdir(dir, function(err, contents) {
-      if (err) throw err;
-      console.log(contents.toString());
-    });
+    const r = await fsp.readdir(dir);
+    console.log(r);
   }
 
   @action
-  async writeRepo() {
-    await fs.writeFile(
-      dir + '/test.txt',
-      'Cool, I can do this in the browser!',
-      function(err) {
-        if (err) throw err;
-        add({ dir, filepath: 'test.txt' }).then(
-          () => console.log('good'),
-          e => console.log('error', e)
-        );
-      }
+  async writeRepo(name: string) {
+    await fsp.writeFile(
+      dir + `/${name}.txt`,
+      'Cool, I can do this in the browser!'
     );
+    await add({ dir, filepath: `${name}.txt` });
+    console.log('good added');
   }
 }

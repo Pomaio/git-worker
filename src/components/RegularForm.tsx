@@ -30,11 +30,11 @@ export const RegularForm = () => {
         <CommonForm
           fullWidth
           label="Регулярное выражение"
-          placeholder="/(\w+)\s(\w+)/"
+          placeholder="(\w+)\s(\w+)"
           multiline
           margin="normal"
           variant="outlined"
-          setStoreValue={setRegExp}
+          setStoreValue={v => setRegExp(v)}
         />
       </Grid>
       <Grid item xs={3}>

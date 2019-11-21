@@ -31,10 +31,10 @@ const Block = styled('div')`
 `;
 
 export const CollapseRow = observer(() => {
-  const { infoStore } = useContext(StoresContext);
-  const { urlsCollection } = infoStore;
+  const { logicStore } = useContext(StoresContext);
+  const { urlsCollection } = logicStore;
   useEffect(() => {
-    infoStore.fetchUrls();
+    logicStore.fetchUrls();
   }, []);
   const [open, setOpen] = useState(false);
 
@@ -57,10 +57,10 @@ export const CollapseRow = observer(() => {
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {urlsCollection &&
-              urlsCollection.map((v, i) => (
+            {
+              urlsCollection?.map((v, i) => (
                 <ElementRow
-                  delete={v => infoStore.deleteUrl(v)}
+                  delete={v => logicStore.deleteUrl(v)}
                   label={v}
                   key={v + i}
                 />
@@ -74,8 +74,8 @@ export const CollapseRow = observer(() => {
 
 interface RowProps {
   delete?: any;
-  label: string;
   key?: any;
+  label: string;
 }
 
 const ElementRow = ({ label, ...anyProp }: RowProps) => (

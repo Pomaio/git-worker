@@ -27,19 +27,22 @@ export const App = hot(() => {
     <>
       <StyledContainer maxWidth="md">
         <Grid container justify="space-around">
-          <Button variant="contained" onClick={() => logicStore.gitPull()}>
+          <Button variant="contained" onClick={() => logicStore.gitPull(logicStore?.urlsCollection?.[0] || '')}>
             Pull
           </Button>
           <Button variant="contained" onClick={() => logicStore.readRepo()}>
             ShowContent
           </Button>
-          <Button variant="contained" onClick={() => logicStore.writeRepo()}>
+          <Button
+            variant="contained"
+            onClick={() => logicStore.writeRepo('test1')}
+          >
             Add txt file
           </Button>
           <Button variant="contained" onClick={() => logicStore.gitCommit()}>
             Commit
           </Button>
-          <Button variant="contained" onClick={() => logicStore.gitPush()}>
+          <Button variant="contained" onClick={() => logicStore.gitPush(logicStore?.urlsCollection?.[0] || '')}>
             Push
           </Button>
           <Button variant="contained" onClick={() => logicStore.cleanFolder()}>

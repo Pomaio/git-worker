@@ -32,7 +32,8 @@ const typescriptRule = {
           ['@babel/plugin-proposal-decorators', { legacy: true }],
           ['@babel/plugin-proposal-class-properties', { loose: true }],
           ['@babel/plugin-transform-typescript', { isTSX: true }],
-          ['@babel/plugin-syntax-dynamic-import']
+          ['@babel/plugin-syntax-dynamic-import'],
+          '@babel/plugin-proposal-optional-chaining'
         ]
       }
     }
@@ -113,11 +114,6 @@ const plugins = [
   new MiniCssExtractPlugin({
     filename: '[name].css',
     chunkFilename: '[id].css'
-  }),
-  new webpack.ProvidePlugin({
-    BrowserFS: 'bfsGlobal',
-    process: 'processGlobal',
-    Buffer: 'bufferGlobal'
   }),
   new MonacoWebpackPlugin()
 ];

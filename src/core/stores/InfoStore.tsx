@@ -3,13 +3,21 @@ import { action, observable } from 'mobx';
 export class InfoStore {
   @observable
   commitInfo?: string;
+
+  @observable
+  email?: string;
+
   @observable
   login?: string;
+
   @observable
   password?: string;
 
   @observable
   urlsCollection?: string[];
+
+  @observable
+  username?: string;
 
   @action
   async deleteUrl(url: string) {
@@ -33,14 +41,14 @@ export class InfoStore {
       this.setLocalStorage(this.urlsCollection);
     }
   }
-  @action
-  reset() {
-    console.log('reset');
-    this.urlsCollection = undefined;
-  }
+
   @action
   setCommitInfo(commitInfo?: string) {
     this.commitInfo = commitInfo;
+  }
+  @action
+  setEmail(email?: string) {
+    if (email && email !== '') this.email = email;
   }
   @action
   setLocalStorage(urlsCollection?: string[]) {
@@ -51,6 +59,7 @@ export class InfoStore {
 
   @action
   setLogin(login?: string) {
+    console.log('set', login);
     if (login && login !== '') this.login = login;
   }
   @action
@@ -60,5 +69,9 @@ export class InfoStore {
   @action
   setUrlsCollection(urlsCollection?: string[]) {
     this.urlsCollection = [...(urlsCollection || [])];
+  }
+  @action
+  setUsername(username?: string) {
+    if (username && username !== '') this.username = username;
   }
 }

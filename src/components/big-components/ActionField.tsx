@@ -8,8 +8,8 @@ import {
   Typography
 } from '@material-ui/core';
 import { CommonForm } from '~/components/CommonForm';
-import { RegularForm } from '~/components/RegularForm';
 import { EditorField } from '~/components/EditorForm';
+import { RegularForm } from '~/components/RegularForm';
 
 export const ActionField = () => {
   const [value, setValue] = useState('regxp');
@@ -53,17 +53,17 @@ export const ActionField = () => {
             onChange={v => {
               //console.log(v);
             }}
-            formating={true}
+            formating={false}
           />
         </Box>
       )}
       {value === 'test' && (
         <CommonForm
           fullWidth
-          label="В корень проекта будет добавлен файл test.txt"
+          label="Введите содержание файла"
           margin="normal"
-          disabled
           variant="outlined"
+          helperText="В корень проекта будет добавлен файл devopsTest.txt"
         />
       )}
     </Box>

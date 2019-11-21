@@ -21,12 +21,7 @@ module.exports = {
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      fs: 'browserfs/dist/shims/fs.js',
-      buffer: 'browserfs/dist/shims/buffer.js',
-      path: 'browserfs/dist/shims/path.js',
-      processGlobal: 'browserfs/dist/shims/process.js',
-      bufferGlobal: 'browserfs/dist/shims/bufferGlobal.js',
-      bfsGlobal: require.resolve('browserfs')
+      fs: 'memfs'
     },
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx'],
     plugins: [
@@ -40,8 +35,7 @@ module.exports = {
   devtool: isProduction ? 'none' : 'cheap-eval-source-map',
 
   module: {
-    rules: [typescriptRule, cssRule, fontsRule, svgRule, imagesRule],
-    noParse: /browserfs\.js/
+    rules: [typescriptRule, cssRule, fontsRule, svgRule, imagesRule]
   },
 
   plugins,
@@ -51,8 +45,5 @@ module.exports = {
     publicPath: process.env.BASE_URL
   },
 
-  node: {
-    process: false,
-    Buffer: false
-  }
+  node: {}
 };

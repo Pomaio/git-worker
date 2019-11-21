@@ -7,6 +7,8 @@ type FormProps = TextFieldProps & { setStoreValue?: any };
 
 export const CommonForm = ({ setStoreValue, ...props }: FormProps) => {
   const [value, setValue] = useState('');
+  if (!setStoreValue)
+    console.log(props.label, '<---- нет переменной в сторе для этого поля');
   useDebounce(() => (setStoreValue ? setStoreValue(value) : null), 500, [
     value
   ]);

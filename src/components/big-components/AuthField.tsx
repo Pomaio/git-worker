@@ -6,7 +6,7 @@ import { UrlForm } from '~/components/UrlForm';
 import { StoresContext } from '~/core/stores';
 
 export const AuthField = () => {
-  const { infoStore } = useContext(StoresContext);
+  const { logicStore } = useContext(StoresContext);
   return (
     <Box>
       <Typography variant="h5" component="h5">
@@ -17,21 +17,24 @@ export const AuthField = () => {
           <CommonForm
             fullWidth
             label="Логин"
+            required
             margin="dense"
             variant="outlined"
-            setStoreValue={infoStore.setLogin}
+            setStoreValue={v => logicStore.setLogin(v)}
           />
         </Grid>
         <Grid item xs={6}>
           <CommonForm
             fullWidth
             label="Пароль"
+            required
             margin="dense"
             variant="outlined"
-            setStoreValue={infoStore.setPassword}
+            setStoreValue={v => logicStore.setPassword(v)}
           />
         </Grid>
       </Grid>
+
       <CollapseRow />
       <UrlForm />
     </Box>
