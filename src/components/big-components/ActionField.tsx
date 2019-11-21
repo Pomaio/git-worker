@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import {
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  Button,
+  Grid,
   Icon,
   Typography
 } from '@material-ui/core';
+
 import { CommonForm } from '~/components/CommonForm';
 import { EditorField } from '~/components/EditorForm';
 import { RegularForm } from '~/components/RegularForm';
+import { StoresContext } from '~/core/stores';
 
 export const ActionField = () => {
   const [value, setValue] = useState('regxp');
+  const { logicStore } = useContext(StoresContext);
   return (
     <Box>
       <Typography variant="h5" component="h5">
@@ -60,12 +65,31 @@ export const ActionField = () => {
       {value === 'test' && (
         <CommonForm
           fullWidth
-          label="Введите содержание файла"
+          label="Содержание файла"
+          placeholder="Простота — залог надежности."
           margin="normal"
           variant="outlined"
           helperText="В корень проекта будет добавлен файл devopsTest.txt"
         />
       )}
+      <Grid
+        container
+        spacing={1}
+        alignItems="flex-end"
+        justify="flex-end"
+        className="submit__button"
+      >
+        <Button
+          variant="outlined"
+          color="primary"
+          size="large"
+          onClick={() =>
+            logicStore.setActionInfo({ type: 'test', data: 'devopsTest' })
+          }
+        >
+          Save
+        </Button>
+      </Grid>
     </Box>
   );
 };

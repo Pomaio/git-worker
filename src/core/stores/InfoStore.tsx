@@ -1,6 +1,14 @@
 import { action, observable } from 'mobx';
 
+interface actionProp {
+  data: string;
+  type: string;
+}
+
 export class InfoStore {
+  @observable
+  actionInfo?: actionProp;
+
   @observable
   commitInfo?: string;
 
@@ -41,6 +49,10 @@ export class InfoStore {
       this.setLocalStorage(this.urlsCollection);
     }
   }
+  @action
+  setActionInfo(actionInfo?: actionProp) {
+    if (actionInfo) this.actionInfo = { ...actionInfo };
+  }
 
   @action
   setCommitInfo(commitInfo?: string) {
@@ -59,7 +71,6 @@ export class InfoStore {
 
   @action
   setLogin(login?: string) {
-    console.log('set', login);
     if (login && login !== '') this.login = login;
   }
   @action

@@ -8,11 +8,16 @@ type FormProps = TextFieldProps & { setStoreValue?: any };
 export const CommonForm = ({ setStoreValue, ...props }: FormProps) => {
   const [value, setValue] = useState('');
   if (!setStoreValue)
-    console.log(props.label, '<---- нет переменной в сторе для этого поля');
+    console.warn(props.label, '<---- нет переменной в сторе для этого поля');
   useDebounce(() => (setStoreValue ? setStoreValue(value) : null), 500, [
     value
   ]);
   return (
-    <TextField fullWidth onChange={e => setValue(e.target.value)} {...props} />
+    <TextField
+      fullWidth
+      onChange={e => setValue(e.target.value)}
+      error={props.required && value === '' ? true : false}
+      {...props}
+    />
   );
 };

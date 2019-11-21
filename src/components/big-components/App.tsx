@@ -22,7 +22,7 @@ const StyledContainer = styled(Container)`
   }
 `;
 export const App = hot(() => {
-  const { logicStore } = useContext(StoresContext);
+  const { logicStore, scriptStore } = useContext(StoresContext);
   return (
     <>
       <StyledContainer maxWidth="md">
@@ -60,7 +60,7 @@ export const App = hot(() => {
             justify="flex-end"
             className="submit__button"
           >
-            <Button variant="outlined" color="secondary" size="large">
+            <Button variant="outlined" color="secondary" size="large" onClick={()=> scriptStore.testScript()}>
               GO
             </Button>
           </Grid>

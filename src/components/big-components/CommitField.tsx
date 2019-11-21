@@ -37,10 +37,14 @@ export const CommitField = () => {
         <CommonForm
           id="outlined-multiline-static"
           label="Сообщение коммита"
+          required
+          placeholder="Многие из вас знакомы с достоинствами программиста.
+           Их всего три, и разумеется это: лень, нетерпеливость и гордыня."
           multiline
           fullWidth
           margin="normal"
           variant="outlined"
+          setStoreValue={v => logicStore.setCommitInfo(v)}
         />
       </Grid>
     </Box>

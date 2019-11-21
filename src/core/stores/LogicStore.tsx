@@ -8,7 +8,6 @@ const fsp = fs.promises;
 
 import { action } from 'mobx';
 import { InfoStore } from './InfoStore';
-
 plugins.set('fs', fs);
 
 const dir = 'repo';
@@ -34,7 +33,7 @@ export class LogicStore extends InfoStore {
         name: this.username || this.login,
         email: this.email
       },
-      message: 'Added the a .txt file'
+      message: this.commitInfo || 'No commit message'
     };
     await commit({
       dir,
@@ -77,11 +76,8 @@ export class LogicStore extends InfoStore {
   }
 
   @action
-  async writeRepo(name: string) {
-    await fsp.writeFile(
-      dir + `/${name}.txt`,
-      'Cool, I can do this in the browser!'
-    );
+  async writeRepo(name: string, data: string) {
+    await fsp.writeFile(dir + `/${name}.txt`, data);
     await add({ dir, filepath: `${name}.txt` });
     console.log('good added');
   }
