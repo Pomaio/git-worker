@@ -41,6 +41,8 @@ export const CollapseRow = observer(() => {
   const handleClick = () => {
     setOpen(!open);
   };
+
+  console.log('rendern collwpse');
   return (
     <Block>
       <Grid item xs={12}>
@@ -57,14 +59,13 @@ export const CollapseRow = observer(() => {
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {
-              urlsCollection?.map((v, i) => (
-                <ElementRow
-                  delete={v => logicStore.deleteUrl(v)}
-                  label={v}
-                  key={v + i}
-                />
-              ))}
+            {urlsCollection?.map((v, i) => (
+              <ElementRow
+                delete={v => logicStore.deleteUrl(v)}
+                label={v}
+                key={v + i}
+              />
+            ))}
           </List>
         </Collapse>
       </Grid>

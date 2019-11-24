@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { Box, Grid, Typography } from '@material-ui/core';
-import { CommonForm } from '~/components/CommonForm';
+import { CommonForm } from '~/components/forms/CommonForm';
 import { StoresContext } from '~/core/stores';
 
 export const CommitField = () => {

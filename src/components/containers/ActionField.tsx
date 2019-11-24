@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext, useState } from 'react';
 
 import {
   BottomNavigation,
@@ -10,29 +10,32 @@ import {
   Typography
 } from '@material-ui/core';
 
-import { CommonForm } from '~/components/CommonForm';
-import { EditorField } from '~/components/EditorForm';
-import { RegularForm } from '~/components/RegularForm';
+import { CommonForm } from '~/components/forms/CommonForm';
+import { EditorField } from '~/components/forms/EditorForm';
+import { RegularForm } from '~/components/forms/RegularForm';
 import { StoresContext } from '~/core/stores';
 
 export const ActionField = () => {
-  const [value, setValue] = useState('regxp');
+  const [tab, setTab] = useState('regexp');
   const { logicStore } = useContext(StoresContext);
+
+  console.log('render ActionField');
+
   return (
     <Box>
       <Typography variant="h5" component="h5">
         Варианты изменения
       </Typography>
       <BottomNavigation
-        value={value}
+        value={tab}
         onChange={(event, newValue) => {
-          setValue(newValue);
+          setTab(newValue);
         }}
         showLabels
       >
         <BottomNavigationAction
           label="Регулярка"
-          value="regxp"
+          value="regexp"
           icon={<Icon>clear_all</Icon>}
         />
         <BottomNavigationAction
@@ -46,23 +49,11 @@ export const ActionField = () => {
           icon={<Icon>restore</Icon>}
         />
       </BottomNavigation>
-      {value === 'regxp' && <RegularForm />}
-      {value === 'script' && (
-        <Box
-          border={'2px solid #dedede'}
-          borderRadius={'5px'}
-          paddingTop={'15px'}
-        >
-          <EditorField
-            value={'//Начните писать свой код....'}
-            onChange={v => {
-              //console.log(v);
-            }}
-            formating={false}
-          />
-        </Box>
+      {tab === 'regexp' && <RegularForm />}
+      {tab === 'script' && (
+        <EditorField value={'//В коде не должно быть комментариев)'} />
       )}
-      {value === 'test' && (
+      {tab === 'test' && (
         <CommonForm
           fullWidth
           label="Содержание файла"
@@ -70,26 +61,12 @@ export const ActionField = () => {
           margin="normal"
           variant="outlined"
           helperText="В корень проекта будет добавлен файл devopsTest.txt"
+          setStoreValue={v => {
+            logicStore.setActionData(v);
+            logicStore.setActionType('test');
+          }}
         />
       )}
-      <Grid
-        container
-        spacing={1}
-        alignItems="flex-end"
-        justify="flex-end"
-        className="submit__button"
-      >
-        <Button
-          variant="outlined"
-          color="primary"
-          size="large"
-          onClick={() =>
-            logicStore.setActionInfo({ type: 'test', data: 'devopsTest' })
-          }
-        >
-          Save
-        </Button>
-      </Grid>
     </Box>
   );
 };

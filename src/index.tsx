@@ -2,11 +2,11 @@ import moment from 'moment';
 import React from 'react';
 import { render } from 'react-dom';
 import { setConfig } from 'react-hot-loader';
-import { App } from './components/big-components/App';
+import { App } from './components/App';
 import { patchLogs } from './patchLogs';
 
 import { configure } from 'mobx';
-import './styleReset.css';
+import './styled/styleReset.css';
 
 configure({
   enforceActions: 'observed'

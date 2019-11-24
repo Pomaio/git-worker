@@ -1,13 +1,15 @@
 import { action, observable } from 'mobx';
 
-interface actionProp {
-  data: string;
-  type: string;
-}
-
-export class InfoStore {
+export class VariablesStore {
+  //variable
   @observable
-  actionInfo?: actionProp;
+  actionAppliedFile?: string;
+
+  @observable
+  actionData?: string | RegExp;
+
+  @observable
+  actionType?: string;
 
   @observable
   commitInfo?: string;
@@ -27,6 +29,7 @@ export class InfoStore {
   @observable
   username?: string;
 
+  // action function for url
   @action
   async deleteUrl(url: string) {
     const r = (this.urlsCollection || []).filter(elem => elem !== url);
@@ -49,9 +52,21 @@ export class InfoStore {
       this.setLocalStorage(this.urlsCollection);
     }
   }
+
+  // function set
   @action
-  setActionInfo(actionInfo?: actionProp) {
-    if (actionInfo) this.actionInfo = { ...actionInfo };
+  setActionAppliedFile(actionAppliedFile?: string) {
+    if (actionAppliedFile) this.actionAppliedFile = actionAppliedFile;
+  }
+
+  @action
+  setActionData(actionData?: string | RegExp) {
+    if (actionData) this.actionData = actionData;
+  }
+
+  @action
+  setActionType(actionType?: string) {
+    if (actionType) this.actionType = actionType;
   }
 
   @action
@@ -77,10 +92,12 @@ export class InfoStore {
   setPassword(password?: string) {
     if (password && password !== '') this.password = password;
   }
+
   @action
   setUrlsCollection(urlsCollection?: string[]) {
     this.urlsCollection = [...(urlsCollection || [])];
   }
+
   @action
   setUsername(username?: string) {
     if (username && username !== '') this.username = username;

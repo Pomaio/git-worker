@@ -7,7 +7,7 @@ const fsp = fs.promises;
 // import { rimraf } from 'rimraf';
 
 import { action } from 'mobx';
-import { InfoStore } from './InfoStore';
+import { VariablesStore } from './VariablesStore';
 plugins.set('fs', fs);
 
 const dir = 'repo';
@@ -17,7 +17,7 @@ const dir = 'repo';
 // const name = 'Mju76yui';
 // const email = 'g.marshinov@deltasolutions.ru';
 
-export class LogicStore extends InfoStore {
+export class LogicStore extends VariablesStore {
   @action
   async addDirTest() {
     await fsp.mkdir(dir, { recursive: true });

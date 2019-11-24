@@ -1,8 +1,8 @@
 import { Box, Grid, Typography } from '@material-ui/core';
 import React, { useContext } from 'react';
 import { CollapseRow } from '~/components/CollapseRow';
-import { CommonForm } from '~/components/CommonForm';
-import { UrlForm } from '~/components/UrlForm';
+import { CommonForm } from '~/components/forms/CommonForm';
+import { UrlForm } from '~/components/forms/UrlForm';
 import { StoresContext } from '~/core/stores';
 
 export const AuthField = () => {
