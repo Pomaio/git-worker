@@ -6,7 +6,10 @@ export class VariablesStore {
   actionAppliedFile?: string;
 
   @observable
-  actionData?: string | RegExp;
+  actionData?: string;
+
+  @observable
+  actionRegExp?: RegExp;
 
   @observable
   actionType?: string;
@@ -60,8 +63,13 @@ export class VariablesStore {
   }
 
   @action
-  setActionData(actionData?: string | RegExp) {
+  setActionData(actionData?: string) {
     if (actionData) this.actionData = actionData;
+  }
+
+  @action
+  setActionRegExp(actionRegExp?: RegExp) {
+    if (actionRegExp) this.actionRegExp = actionRegExp;
   }
 
   @action

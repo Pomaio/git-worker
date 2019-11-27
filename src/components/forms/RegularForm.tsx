@@ -25,7 +25,7 @@ export const RegularForm = () => {
 
   useEffect(() => {
     const r = new RegExp(regExp, flags.join(''));
-    logicStore.setActionData(r);
+    logicStore.setActionRegExp(r);
   }, [regExp, flags]);
 
   console.log('render RegularForm', logicStore.actionData);
@@ -60,18 +60,26 @@ export const RegularForm = () => {
           </FormControl>
         </Grid>
       </Grid>
-      <Grid container spacing={2} alignItems="center" justify="flex-start">
-        <Grid item xs={12}>
-          <CommonForm
-            fullWidth
-            label="Выбор файлов"
-            placeholder="'src/**/*.{css,scss}', '**/index.js'"
-            multiline
-            margin="normal"
-            variant="outlined"
-            setStoreValue={v => logicStore.setActionAppliedFile(v)}
-          />
-        </Grid>
+      <Grid item xs={12}>
+        <CommonForm
+          fullWidth
+          label="Данные замены"
+          multiline
+          margin="normal"
+          variant="outlined"
+          setStoreValue={v => logicStore.setActionData(v)}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <CommonForm
+          fullWidth
+          label="Выбор файлов"
+          placeholder="'src/**/*.{css,scss}', '**/index.js'"
+          multiline
+          margin="normal"
+          variant="outlined"
+          setStoreValue={v => logicStore.setActionAppliedFile(v)}
+        />
       </Grid>
     </>
   );

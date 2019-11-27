@@ -13,7 +13,7 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
   const { logicStore } = useContext(StoresContext);
   const [data, setData] = useState('');
   useDebounce(() => logicStore.setActionData(data), 1000, [data]);
-  useEffect(() => logicStore.setActionType('script'), []);
+  useEffect(() => logicStore.setActionType('code'), []);
 
   return (
     <>

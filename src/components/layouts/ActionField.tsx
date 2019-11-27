@@ -40,7 +40,7 @@ export const ActionField = () => {
         />
         <BottomNavigationAction
           label="Скрипт"
-          value="script"
+          value="code"
           icon={<Icon>format_indent_increase</Icon>}
         />
         <BottomNavigationAction
@@ -50,7 +50,7 @@ export const ActionField = () => {
         />
       </BottomNavigation>
       {tab === 'regexp' && <RegularForm />}
-      {tab === 'script' && (
+      {tab === 'code' && (
         <EditorField value={'//В коде не должно быть комментариев)'} />
       )}
       {tab === 'test' && (

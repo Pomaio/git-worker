@@ -1,9 +1,10 @@
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid, Icon, Snackbar } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { StoresContext } from '~/core/stores';
+import { Notification } from './Notification';
 import { ActionField } from './layouts/ActionField';
 import { AuthField } from './layouts/AuthField';
 import { CommitField } from './layouts/CommitField';
@@ -23,6 +24,7 @@ const StyledContainer = styled(Container)`
 `;
 export const App = hot(() => {
   const { scriptStore } = useContext(StoresContext);
+  const [open, setOpen] = useState(false);
 
   console.log('rendder app');
   return (
@@ -43,13 +45,26 @@ export const App = hot(() => {
               variant="outlined"
               color="secondary"
               size="large"
-              onClick={() => scriptStore.testScript()}
+              onClick={() => {
+                scriptStore.start();
+              }}
             >
               GO
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={() => {
+                scriptStore.start();
+              }}
+            >
+              Test
             </Button>
           </Grid>
         </Grid>
       </StyledContainer>
+      <Notification />
     </>
   );
 });

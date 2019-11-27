@@ -3,9 +3,6 @@ import { add, clone, commit, plugins, push } from 'isomorphic-git';
 import * as fs from 'fs';
 const fsp = fs.promises;
 
-// const path = require('path');
-// import { rimraf } from 'rimraf';
-
 import { action } from 'mobx';
 import { VariablesStore } from './VariablesStore';
 plugins.set('fs', fs);
@@ -35,10 +32,7 @@ export class LogicStore extends VariablesStore {
       },
       message: this.commitInfo || 'No commit message'
     };
-    await commit({
-      dir,
-      ...i
-    });
+    this.goCircularRepo(dir => commit({ dir, ...i }));
   }
   @action
   async gitPull(url: string) {
@@ -70,9 +64,28 @@ export class LogicStore extends VariablesStore {
   }
 
   @action
+  async goCircularRepo(f?: any) {
+    async function getFiles(dir) {
+      const files = await fsp.readdir(dir);
+      for (const i in files) {
+        const name = dir + '/' + files[i];
+        fs.statSync(name).isDirectory()
+          ? await getFiles(name)
+          : await f(dir + '/' + files[i]);
+      }
+    }
+    await getFiles(dir);
+  }
+
+  @action
+  async modifyFile(path: string, f: any) {
+    const file = await fsp.readFile(path);
+    await fsp.writeFile(path, f(file));
+  }
+
+  @action
   async readRepo() {
-    const r = await fsp.readdir(dir);
-    console.log(r);
+    await this.goCircularRepo(v => console.log(v));
   }
 
   @action

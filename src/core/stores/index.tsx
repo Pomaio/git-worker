@@ -1,7 +1,7 @@
 import { createContext } from 'react';
-import { VariablesStore } from './VariablesStore';
 import { LogicStore } from './LogicStore';
-import { ScriptStore } from '../../components/forms/ScriptStore';
+import { ScriptStore } from './ScriptStore';
+import { VariablesStore } from './VariablesStore';
 
 const infoStore = new VariablesStore();
 const logicStore = new LogicStore();
