@@ -16,12 +16,18 @@ const dir = 'repo';
 
 export class LogicStore extends VariablesStore {
   @action
-  async addDirTest() {
-    await fsp.mkdir(dir, { recursive: true });
+  async addTestFile(name: string, data: string) {
+    await fsp.writeFile(dir + `/${name}.txt`, data);
+    await add({ dir, filepath: `${name}.txt` });
+    console.log('good added');
   }
   @action
   async cleanFolder() {
     (fs as any).vol.reset();
+  }
+  @action
+  async gitAdd() {
+    await this.goCircularRepo(filepath => add({ dir: './', filepath }));
   }
   @action
   async gitCommit() {
@@ -32,7 +38,7 @@ export class LogicStore extends VariablesStore {
       },
       message: this.commitInfo || 'No commit message'
     };
-    this.goCircularRepo(dir => commit({ dir, ...i }));
+    await commit({ dir, ...i });
   }
   @action
   async gitPull(url: string) {
@@ -68,10 +74,12 @@ export class LogicStore extends VariablesStore {
     async function getFiles(dir) {
       const files = await fsp.readdir(dir);
       for (const i in files) {
-        const name = dir + '/' + files[i];
-        fs.statSync(name).isDirectory()
-          ? await getFiles(name)
-          : await f(dir + '/' + files[i]);
+        const path = dir + '/' + files[i];
+        files[i] !== '.git'
+          ? fs.statSync(path).isDirectory()
+            ? await getFiles(path)
+            : await f(path)
+          : '';
       }
     }
     await getFiles(dir);
@@ -79,19 +87,12 @@ export class LogicStore extends VariablesStore {
 
   @action
   async modifyFile(path: string, f: any) {
-    const file = await fsp.readFile(path);
+    const file = await (await fsp.readFile(path)).toString();
     await fsp.writeFile(path, f(file));
   }
 
   @action
   async readRepo() {
     await this.goCircularRepo(v => console.log(v));
-  }
-
-  @action
-  async writeRepo(name: string, data: string) {
-    await fsp.writeFile(dir + `/${name}.txt`, data);
-    await add({ dir, filepath: `${name}.txt` });
-    console.log('good added');
   }
 }

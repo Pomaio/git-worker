@@ -2,14 +2,18 @@ import { action, observable } from 'mobx';
 import { LogicStore } from './LogicStore';
 
 // import * as fg from 'fast-glob';
-// const fs = require('fs');
-// fs.globSync = fg.sync;
+const fs = require('fs');
+const path = require('path');
+const __dirname = path.resolve();
+console.log(path, __dirname);
+// const a = fg.sync.bind(__dirname);
+const saferEval = require('safer-eval');
 
 export class ScriptStore {
   // tslint:disable: member-ordering
 
   @observable
-  errorMessage?: string;
+  notificationMessage?: string;
 
   @observable
   notificationStatus?: boolean;
@@ -21,12 +25,18 @@ export class ScriptStore {
     console.log('code');
 
     await this.logicStore.gitPull(url); // 1 pull
-    const f = data => eval(this.logicStore.actionData || '').bind(data);
-    console.log(f, typeof f);
-    // await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
+    const c = data => console.log(data);
+    const f = saferEval(this.logicStore.actionData || '');
+    // console.log(f, typeof f);
+    await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
+    await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, c));
+    await this.logicStore.gitAdd();
+    await this.logicStore.gitCommit(); // 4 commit
+    await this.logicStore.gitPush(url);
 
-    // await this.logicStore.gitCommit(); // 4 commit
-    // await this.logicStore.gitPush(url);
+    // notification
+    await this.setNotificationMessage('Успешно');
+    this.setNotificationStatus(true);
   }
 
   @action
@@ -40,8 +50,13 @@ export class ScriptStore {
 
     await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
 
+    await this.logicStore.gitAdd();
     await this.logicStore.gitCommit(); // 4 commit
     await this.logicStore.gitPush(url);
+
+    // notification
+    await this.setNotificationMessage('Успешно');
+    this.setNotificationStatus(true);
   }
 
   @action
@@ -51,31 +66,27 @@ export class ScriptStore {
     await this.logicStore.gitPull(url); // 1 pull
     await this.logicStore.readRepo(); // 2 show file in console
 
-    // const entries = fs.globSync(['*'], { stats: true, cwd: 'dir' });
+    // const entries = fs.globSync(['*'], { stats: true, cwd: '/dir' });
     // console.log(entries);
 
     // await this.logicStore.writeRepo('devopsTest', this.logicStore?.actionData || 'Тест'); // 3 add new file
+    // await this.logicStore.gitAdd();
     // await this.logicStore.gitCommit(); // 4 commit
     // await this.logicStore.gitPush(url); // 5 push
-  }
-  @action
-  async Test(url: string) {
-    console.log('test');
 
-    await this.logicStore.gitPull(url); // 1 pull
-    await this.logicStore.readRepo(); // 2 show file in console
-
-    // const entries = fs.globSync(['*'], { stats: true, cwd: 'dir' });
-    // console.log(entries);
-
-    // await this.logicStore.writeRepo('devopsTest', this.logicStore?.actionData || 'Тест'); // 3 add new file
-    // await this.logicStore.gitCommit(); // 4 commit
-    // await this.logicStore.gitPush(url); // 5 push
+    // notification
+    await this.setNotificationMessage('Успешно');
+    this.setNotificationStatus(true);
   }
 
   @action
   async setNotificationStatus(status?: boolean) {
     this.notificationStatus = status;
+  }
+
+  @action
+  async setNotificationMessage(notificationMessage?: string) {
+    this.notificationMessage = notificationMessage;
   }
 
   @action

@@ -21,7 +21,8 @@ module.exports = {
   resolve: {
     alias: {
       'react-dom': '@hot-loader/react-dom',
-      fs: 'memfs'
+      fs: 'memfs',
+      path: 'path-browserify'
     },
     extensions: ['.ts', '.tsx', '.mjs', '.js', '.jsx'],
     plugins: [

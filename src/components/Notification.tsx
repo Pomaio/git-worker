@@ -21,7 +21,7 @@ export const Notification = observer(() => {
       }}
       message={
         <div id="message-id">
-          Заполнены не все поля!<span>{scriptStore.errorMessage}</span>
+          {scriptStore.notificationMessage || 'Заполнены не все поля!'}
         </div>
       }
       action={

@@ -51,16 +51,6 @@ export const App = hot(() => {
             >
               GO
             </Button>
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              onClick={() => {
-                scriptStore.start();
-              }}
-            >
-              Test
-            </Button>
           </Grid>
         </Grid>
       </StyledContainer>
