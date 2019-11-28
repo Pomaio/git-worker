@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx';
-import { glob, translateVar } from '~/utils';
+import { glob, translateVar, globMatch } from '~/utils';
 import { LogicStore } from './LogicStore';
 
 const saferEval = require('safer-eval');
@@ -17,15 +17,31 @@ export class ScriptStore {
 
   @action
   async scriptСode(url: string) {
+    const pattern = this.logicStore.actionAppliedFile
+      ?.split(',')
+      .map(v => v.trim()) || ['*'];
+
     const f = saferEval(this.logicStore.actionData || '');
-    await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
+    await this.logicStore.goCircularRepo(pathFile =>
+      globMatch(pathFile, pattern)
+        ? this.logicStore.modifyFile(pathFile, f)
+        : null
+    );
   }
 
   @action
   async scriptRegExp(url: string) {
+    const pattern = this.logicStore.actionAppliedFile
+      ?.split(',')
+      .map(v => v.trim()) || ['*'];
+
     const f = v =>
       v.replace(this.logicStore?.actionRegExp, this.logicStore?.actionData);
-    await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
+    await this.logicStore.goCircularRepo(pathFile =>
+      globMatch(pathFile, pattern)
+        ? this.logicStore.modifyFile(pathFile, f)
+        : null
+    );
   }
 
   @action
@@ -84,12 +100,14 @@ export class ScriptStore {
     await this.logicStore.gitPull((this.logicStore.urlsCollection || [''])[0]);
     await this.logicStore.goCircularRepo(pathFile => paths.push(pathFile));
 
-    const r = glob(
-      paths,
-      this.logicStore.actionAppliedFile?.split(',').map(v => v.trim()) || ['*']
-    );
-    r?.forEach(v => console.log(v));
-    console.log(r, this.logicStore.actionAppliedFile);
+    const pattern = this.logicStore.actionAppliedFile
+      ?.split(',')
+      .map(v => v.trim()) || ['*'];
+
+    const r = glob(paths, pattern);
+    r?.forEach(v => console.log(v)); // выволдит массив нужных файлов
+
+    paths.forEach(v => console.log(v, globMatch(v, pattern))); // каждый раз проверяет
   }
 
   async validation() {

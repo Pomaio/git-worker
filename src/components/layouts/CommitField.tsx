@@ -9,14 +9,13 @@ export const CommitField = () => {
   return (
     <Box>
       <Typography variant="h5" component="h5">
-        Коммит:
+        Информация коммита:
       </Typography>
       <Grid container spacing={1} alignItems="flex-end" justify="flex-start">
         <Grid item xs={6}>
           <CommonForm
             fullWidth
-            label="Username"
-            placeholder="по умолчанию будет взят логин"
+            label="Username(default: логин)"
             margin="dense"
             variant="outlined"
             setStoreValue={v => logicStore.setUsername(v)}
