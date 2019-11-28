@@ -7,7 +7,7 @@ import { action } from 'mobx';
 import { VariablesStore } from './VariablesStore';
 plugins.set('fs', fs);
 
-const dir = 'repo';
+const rootDir = 'repo';
 // const username = 'g.marshinov';
 // const password = 'Mju76yui';
 // const url = 'http://gitlab.ds.local/g.marshinov/test';
@@ -17,9 +17,8 @@ const dir = 'repo';
 export class LogicStore extends VariablesStore {
   @action
   async addTestFile(name: string, data: string) {
-    await fsp.writeFile(dir + `/${name}.txt`, data);
-    await add({ dir, filepath: `${name}.txt` });
-    console.log('good added');
+    await fsp.writeFile(rootDir + `/${name}.txt`, data);
+    await add({ dir: rootDir, filepath: `${name}.txt` });
   }
   @action
   async cleanFolder() {
@@ -27,7 +26,10 @@ export class LogicStore extends VariablesStore {
   }
   @action
   async gitAdd() {
-    await this.goCircularRepo(filepath => add({ dir: './', filepath }));
+    await this.goCircularRepo(path => {
+      const filepath = path.replace(rootDir + '/', '');
+      add({ dir: rootDir, filepath });
+    });
   }
   @action
   async gitCommit() {
@@ -38,7 +40,7 @@ export class LogicStore extends VariablesStore {
       },
       message: this.commitInfo || 'No commit message'
     };
-    await commit({ dir, ...i });
+    await commit({ dir: rootDir, ...i });
   }
   @action
   async gitPull(url: string) {
@@ -47,7 +49,7 @@ export class LogicStore extends VariablesStore {
       password: this.password
     };
     await clone({
-      dir,
+      dir: rootDir,
       url,
       ref: 'master',
       singleBranch: true,
@@ -62,7 +64,7 @@ export class LogicStore extends VariablesStore {
       password: this.password
     };
     await push({
-      dir,
+      dir: rootDir,
       url,
       ref: 'master',
       ...i
@@ -82,7 +84,8 @@ export class LogicStore extends VariablesStore {
           : '';
       }
     }
-    await getFiles(dir);
+    await getFiles(rootDir);
+    // await getFiles(rootDir);
   }
 
   @action

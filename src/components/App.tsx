@@ -52,6 +52,24 @@ export const App = hot(() => {
               GO
             </Button>
           </Grid>
+          <Grid
+            container
+            spacing={1}
+            alignItems="flex-end"
+            justify="flex-end"
+            className="submit__button"
+          >
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="large"
+              onClick={() => {
+                scriptStore.test();
+              }}
+            >
+              Test
+            </Button>
+          </Grid>
         </Grid>
       </StyledContainer>
       <Notification />

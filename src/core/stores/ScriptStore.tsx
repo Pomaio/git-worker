@@ -1,12 +1,7 @@
 import { action, observable } from 'mobx';
+import { glob, translateVar } from '~/utils';
 import { LogicStore } from './LogicStore';
 
-// import * as fg from 'fast-glob';
-const fs = require('fs');
-const path = require('path');
-const __dirname = path.resolve();
-console.log(path, __dirname);
-// const a = fg.sync.bind(__dirname);
 const saferEval = require('safer-eval');
 
 export class ScriptStore {
@@ -22,60 +17,38 @@ export class ScriptStore {
 
   @action
   async scriptСode(url: string) {
-    console.log('code');
-
-    await this.logicStore.gitPull(url); // 1 pull
-    const c = data => console.log(data);
     const f = saferEval(this.logicStore.actionData || '');
-    // console.log(f, typeof f);
     await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
-    await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, c));
-    await this.logicStore.gitAdd();
-    await this.logicStore.gitCommit(); // 4 commit
-    await this.logicStore.gitPush(url);
-
-    // notification
-    await this.setNotificationMessage('Успешно');
-    this.setNotificationStatus(true);
   }
 
   @action
   async scriptRegExp(url: string) {
-    console.log('regexp');
-
-    await this.logicStore.gitPull(url); // 1 pull
-
     const f = v =>
       v.replace(this.logicStore?.actionRegExp, this.logicStore?.actionData);
-
     await this.logicStore.goCircularRepo(v => this.logicStore.modifyFile(v, f));
-
-    await this.logicStore.gitAdd();
-    await this.logicStore.gitCommit(); // 4 commit
-    await this.logicStore.gitPush(url);
-
-    // notification
-    await this.setNotificationMessage('Успешно');
-    this.setNotificationStatus(true);
   }
 
   @action
   async scriptTest(url: string) {
-    console.log('test');
+    await this.logicStore.readRepo();
+    await this.logicStore.addTestFile(
+      'devopsTest',
+      this.logicStore?.actionData || 'Тест'
+    );
+  }
 
+  @action
+  async scriptStart(script: any, url: string, progress?: string) {
     await this.logicStore.gitPull(url); // 1 pull
-    await this.logicStore.readRepo(); // 2 show file in console
 
-    // const entries = fs.globSync(['*'], { stats: true, cwd: '/dir' });
-    // console.log(entries);
+    await script(url); // 2 run scenario
 
-    // await this.logicStore.writeRepo('devopsTest', this.logicStore?.actionData || 'Тест'); // 3 add new file
-    // await this.logicStore.gitAdd();
-    // await this.logicStore.gitCommit(); // 4 commit
-    // await this.logicStore.gitPush(url); // 5 push
+    await this.logicStore.gitAdd(); // 3 add .
+    await this.logicStore.gitCommit(); // 4 commit
+    await this.logicStore.gitPush(url); // 5 push
 
-    // notification
-    await this.setNotificationMessage('Успешно');
+    // 6 notification
+    await this.setNotificationMessage('Выполнено: ' + progress);
     this.setNotificationStatus(true);
   }
 
@@ -91,32 +64,59 @@ export class ScriptStore {
 
   @action
   async start() {
-    if (!this.validation()) return;
-    console.log('action', this.logicStore.actionType);
+    if (!(await this.validation())) return;
+
     const f = {
       regexp: u => this.scriptRegExp(u),
       test: u => this.scriptTest(u),
       code: u => this.scriptСode(u)
     }[this.logicStore.actionType || ''];
 
-    console.log(f, typeof f);
+    let i = 0;
     for (const url of this.logicStore.urlsCollection || []) {
-      await f(url);
+      const progress = `${++i}/${this.logicStore.urlsCollection?.length}`;
+      await this.scriptStart(f, url, progress);
     }
   }
+  @action
+  async test() {
+    let paths = new Array<string>();
+    await this.logicStore.gitPull((this.logicStore.urlsCollection || [''])[0]);
+    await this.logicStore.goCircularRepo(pathFile => paths.push(pathFile));
 
-  validation() {
-    const validate =
-      this.logicStore.login &&
-      this.logicStore.password &&
-      this.logicStore.login &&
-      this.logicStore.email &&
-      this.logicStore.commitInfo &&
-      this.logicStore.actionData;
-    if (!validate) {
-      this.setNotificationStatus(true);
-      return false;
+    const r = glob(
+      paths,
+      this.logicStore.actionAppliedFile?.split(',').map(v => v.trim()) || ['*']
+    );
+    r?.forEach(v => console.log(v));
+    console.log(r, this.logicStore.actionAppliedFile);
+  }
+
+  async validation() {
+    const requiredVariables = [
+      'login',
+      'password',
+      'email',
+      'commitInfo',
+      'actionData'
+    ];
+
+    if (
+      requiredVariables.every(
+        v => this.logicStore[v] && this.logicStore[v] !== ''
+      )
+    ) {
+      return true;
     }
-    return true;
+    // requiredVariables.forEach(v => console.log(v, this.logicStore[v]));
+    const info = requiredVariables.filter(
+      v => !this.logicStore[v] || this.logicStore[v] == ''
+    );
+    await this.setNotificationMessage(
+      'Поля не заполнены: ' + info.map(v => translateVar(v)).join(', ')
+    );
+    await this.setNotificationStatus(true);
+
+    return false;
   }
 }

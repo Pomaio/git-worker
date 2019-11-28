@@ -50,9 +50,7 @@ export const ActionField = () => {
         />
       </BottomNavigation>
       {tab === 'regexp' && <RegularForm />}
-      {tab === 'code' && (
-        <EditorField value={'//В коде не должно быть комментариев)'} />
-      )}
+      {tab === 'code' && <EditorField />}
       {tab === 'test' && (
         <CommonForm
           fullWidth

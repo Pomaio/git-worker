@@ -83,7 +83,7 @@ export class VariablesStore {
   }
   @action
   setEmail(email?: string) {
-    if (email && email !== '') this.email = email;
+    if (email) this.email = email;
   }
   @action
   setLocalStorage(urlsCollection?: string[]) {
@@ -94,11 +94,11 @@ export class VariablesStore {
 
   @action
   setLogin(login?: string) {
-    if (login && login !== '') this.login = login;
+    if (login) this.login = login;
   }
   @action
   setPassword(password?: string) {
-    if (password && password !== '') this.password = password;
+    if (password) this.password = password;
   }
 
   @action
@@ -108,6 +108,6 @@ export class VariablesStore {
 
   @action
   setUsername(username?: string) {
-    if (username && username !== '') this.username = username;
+    if (username) this.username = username;
   }
 }

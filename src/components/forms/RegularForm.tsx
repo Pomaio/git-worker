@@ -74,7 +74,7 @@ export const RegularForm = () => {
         <CommonForm
           fullWidth
           label="Выбор файлов"
-          placeholder="'src/**/*.{css,scss}', '**/index.js'"
+          placeholder="src/**/*.{css,scss}, **/index.js"
           multiline
           margin="normal"
           variant="outlined"

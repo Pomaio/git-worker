@@ -30,7 +30,7 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
             minimap: { enabled: false },
             automaticLayout: true,
             renderLineHighlight: 'none',
-            value
+            value: value || "(v) => v + ' _test:' + v.length"
           }}
           onChange={v => setData(v)}
           editorDidMount={editor => {
@@ -55,7 +55,7 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
           <CommonForm
             fullWidth
             label="Выбор файлов"
-            placeholder="'src/**/*.{css,scss}', '**/index.js'"
+            placeholder="src/**/*.{css,scss}, **/index.js"
             multiline
             margin="normal"
             variant="outlined"
