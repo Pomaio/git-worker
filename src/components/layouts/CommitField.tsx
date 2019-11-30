@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
 
 import { Box, Grid, Typography } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import { CommonForm } from '~/components/forms/CommonForm';
 import { StoresContext } from '~/core/stores';
 
-export const CommitField = () => {
+export const CommitField = observer(() => {
   const { logicStore } = useContext(StoresContext);
   return (
     <Box>
@@ -15,9 +16,10 @@ export const CommitField = () => {
         <Grid item xs={6}>
           <CommonForm
             fullWidth
-            label="Username(default: логин)"
+            label="Username (default: логин)"
             margin="dense"
             variant="outlined"
+            value={logicStore.username}
             setStoreValue={v => logicStore.setUsername(v)}
           />
         </Grid>
@@ -28,6 +30,7 @@ export const CommitField = () => {
             required
             margin="dense"
             variant="outlined"
+            value={logicStore.email || ''}
             setStoreValue={v => logicStore.setEmail(v)}
           />
         </Grid>
@@ -48,4 +51,4 @@ export const CommitField = () => {
       </Grid>
     </Box>
   );
-};
+});

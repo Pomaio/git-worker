@@ -1,11 +1,12 @@
 import { Box, Grid, Typography } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import React, { useContext } from 'react';
 import { CollapseRow } from '~/components/CollapseRow';
 import { CommonForm } from '~/components/forms/CommonForm';
 import { UrlForm } from '~/components/forms/UrlForm';
 import { StoresContext } from '~/core/stores';
 
-export const AuthField = () => {
+export const AuthField = observer(() => {
   const { logicStore } = useContext(StoresContext);
   return (
     <Box>
@@ -20,6 +21,7 @@ export const AuthField = () => {
             required
             margin="dense"
             variant="outlined"
+            value={logicStore.login || ''}
             setStoreValue={v => logicStore.setLogin(v)}
           />
         </Grid>
@@ -30,13 +32,13 @@ export const AuthField = () => {
             required
             margin="dense"
             variant="outlined"
+            value={logicStore.password || ''}
             setStoreValue={v => logicStore.setPassword(v)}
           />
         </Grid>
       </Grid>
-
       <CollapseRow />
       <UrlForm />
     </Box>
   );
-};
+});

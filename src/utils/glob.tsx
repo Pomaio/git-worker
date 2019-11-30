@@ -10,8 +10,8 @@ export const glob = (
 ): string[] | undefined => {
   return mm(paths, patterns);
 };
-export const globMatch = (paths: string, patterns: string[]): boolean => {
-  return mm.isMatch(paths, patterns);
+export const globMatch = (path: string, patterns: string[]): boolean => {
+  return mm.isMatch(path, patterns);
 };
 // больше информации тут
 // https://github.com/micromatch/micromatch#micromatch

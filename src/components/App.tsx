@@ -1,6 +1,6 @@
 import { Button, Grid, Icon, Snackbar } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { StoresContext } from '~/core/stores';
@@ -23,10 +23,8 @@ const StyledContainer = styled(Container)`
   }
 `;
 export const App = hot(() => {
-  const { scriptStore } = useContext(StoresContext);
-  const [open, setOpen] = useState(false);
-
-  console.log('rendder app');
+  const { scriptStore, logicStore } = useContext(StoresContext);
+  useEffect(() => logicStore.fetchVariables());
   return (
     <>
       <StyledContainer maxWidth="md">

@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 
-export class VariablesStore {
+export class FormStore {
   //variable
   @observable
   actionAppliedFile?: string;
@@ -26,34 +26,51 @@ export class VariablesStore {
   @observable
   password?: string;
 
+  savedVariable = ['login', 'password', 'email', 'username', 'urlCollection'];
+
   @observable
-  urlsCollection?: string[];
+  urlCollection?: string[];
 
   @observable
   username?: string;
 
-  // action function for url
+  // action function
   @action
-  async deleteUrl(url: string) {
-    const r = (this.urlsCollection || []).filter(elem => elem !== url);
+  deleteUrl(url: string) {
+    const r = (this.urlCollection || []).filter(elem => elem !== url);
     if (r && r !== []) {
-      this.setLocalStorage(r);
-      this.setUrlsCollection(r);
+      this.setLocalStorage('urlCollection', r);
+      this.setUrlCollection(r);
     }
   }
-
   @action
-  async fetchUrls() {
-    const r = localStorage.getItem('URLS');
-    if (r) this.setUrlsCollection(JSON.parse(r));
+  fetchVariables() {
+    const fnPick = (name: string) =>
+      ({
+        login: v => this.setLogin(v),
+        password: v => this.setPassword(v),
+        email: v => this.setEmail(v),
+        username: v => this.setUsername(v),
+        urlCollection: v => this.setUrlCollection(v)
+      }[name]);
+    this.savedVariable.forEach(v => {
+      const r = localStorage.getItem(v);
+      if (r) fnPick(v)(JSON.parse(r));
+    });
   }
 
   @action
-  async pushUrl(url: string) {
+  pushUrl(url: string) {
     if (url !== '') {
-      this.urlsCollection = [...(this.urlsCollection || []), url];
-      this.setLocalStorage(this.urlsCollection);
+      this.urlCollection = [...(this.urlCollection || []), url];
+      this.setLocalStorage('urlCollection', this.urlCollection);
     }
+  }
+  @action
+  saveFormVariables() {
+    this.savedVariable.forEach(v => {
+      this.setLocalStorage(v, this[v]);
+    });
   }
 
   // function set
@@ -86,9 +103,9 @@ export class VariablesStore {
     if (email) this.email = email;
   }
   @action
-  setLocalStorage(urlsCollection?: string[]) {
-    if (urlsCollection) {
-      localStorage.setItem('URLS', JSON.stringify(urlsCollection));
+  setLocalStorage(name: string, value: any) {
+    if (value) {
+      localStorage.setItem(name, JSON.stringify(value));
     }
   }
 
@@ -102,8 +119,8 @@ export class VariablesStore {
   }
 
   @action
-  setUrlsCollection(urlsCollection?: string[]) {
-    this.urlsCollection = [...(urlsCollection || [])];
+  setUrlCollection(urlCollection?: string[]) {
+    this.urlCollection = [...(urlCollection || [])];
   }
 
   @action

@@ -1,10 +1,10 @@
 import { createContext } from 'react';
-import { LogicStore } from './LogicStore';
+import { GitStore } from './GitStore';
 import { ScriptStore } from './ScriptStore';
-import { VariablesStore } from './VariablesStore';
+import { FormStore } from './FormStore';
 
-const infoStore = new VariablesStore();
-const logicStore = new LogicStore();
+const infoStore = new FormStore();
+const logicStore = new GitStore();
 const scriptStore = new ScriptStore(logicStore);
 
 const StoresContext = createContext({
@@ -13,4 +13,9 @@ const StoresContext = createContext({
   scriptStore
 });
 
-export { StoresContext, VariablesStore as InfoStore, LogicStore, ScriptStore };
+export {
+  StoresContext,
+  FormStore as InfoStore,
+  GitStore as LogicStore,
+  ScriptStore
+};

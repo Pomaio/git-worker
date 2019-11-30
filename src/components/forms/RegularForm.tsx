@@ -28,8 +28,6 @@ export const RegularForm = () => {
     logicStore.setActionRegExp(r);
   }, [regExp, flags]);
 
-  console.log('render RegularForm', logicStore.actionData);
-
   return (
     <>
       <Grid container spacing={2} alignItems="center" justify="flex-start">

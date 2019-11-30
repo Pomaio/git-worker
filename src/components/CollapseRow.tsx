@@ -8,7 +8,7 @@ import {
   ListItemSecondaryAction,
   ListItemText
 } from '@material-ui/core';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import Icon from '@material-ui/core/Icon';
 import { observer } from 'mobx-react-lite';
@@ -32,17 +32,14 @@ const Block = styled('div')`
 
 export const CollapseRow = observer(() => {
   const { logicStore } = useContext(StoresContext);
-  const { urlsCollection } = logicStore;
-  useEffect(() => {
-    logicStore.fetchUrls();
-  }, []);
+  const { urlCollection } = logicStore;
+
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
   };
 
-  console.log('rendern collwpse');
   return (
     <Block>
       <Grid item xs={12}>
@@ -59,7 +56,7 @@ export const CollapseRow = observer(() => {
         </ListItem>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
-            {urlsCollection?.map((v, i) => (
+            {urlCollection?.map((v, i) => (
               <ElementRow
                 delete={v => logicStore.deleteUrl(v)}
                 label={v}
