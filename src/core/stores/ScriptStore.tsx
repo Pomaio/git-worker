@@ -27,12 +27,11 @@ export class ScriptStore {
       ?.split(',')
       .map(v => v.trim()) || ['*'];
 
-    const f = v =>
+    const fn = v =>
       v.replace(this.logicStore?.actionRegExp, this.logicStore?.actionData);
     await this.logicStore.goRepo(pathFile => {
-      console.log(pathFile, pattern, globMatch(pathFile, pattern));
       globMatch(pathFile, pattern)
-        ? this.logicStore.modifyFile(pathFile, f)
+        ? this.logicStore.modifyFile(pathFile, fn)
         : null;
     });
   }
@@ -78,7 +77,7 @@ export class ScriptStore {
 
     this.logicStore.saveFormVariables();
 
-    const f = {
+    const fn = {
       regexp: u => this.scriptRegExp(u),
       add: u => this.scriptAddFile(u),
       code: u => this.scriptСode(u)
@@ -86,29 +85,13 @@ export class ScriptStore {
 
     this.logicStore.urlCollection?.forEach(async (url, i) => {
       const progress = `${i + 1}/${this.logicStore.urlCollection?.length}`;
-      await this.scriptStart(f, url, progress);
+      await this.scriptStart(fn, url, progress);
     });
     // let i = 0;
     // for (const url of this.logicStore.urlCollection || []) {
     //   const progress = `${++i}/${this.logicStore.urlCollection?.length}`;
     //   await this.scriptStart(f, url, progress);
     // }
-  }
-  @action
-  async test() {
-    let paths = new Array<string>();
-    await this.logicStore.clone((this.logicStore.urlCollection || [''])[0]);
-    await this.logicStore.goRepo();
-    // await this.logicStore.goCircularRepo(pathFile => paths.push(pathFile));
-
-    // const pattern = this.logicStore.actionAppliedFile
-    //   ?.split(',')
-    //   .map(v => v.trim()) || ['*'];
-
-    // const r = glob(paths, pattern);
-    // r?.forEach(v => console.log(v)); // выволдит массив нужных файлов
-
-    // paths.forEach(v => console.log(v, globMatch(v, pattern))); // каждый раз проверяет
   }
 
   async validation() {

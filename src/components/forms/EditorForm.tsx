@@ -11,12 +11,13 @@ interface EditorProps extends MonacoEditorProps {
 export const EditorField = ({ value, ...editorProp }: EditorProps) => {
   const { logicStore } = useContext(StoresContext);
   const [data, setData] = useState('');
+  const defaultValue =
+    value || 'async ( fsp, vol, repo) => console.log(vol.toJSON())';
+
   useDebounce(() => logicStore.setActionData(data), 1000, [data]);
   useEffect(() => {
     logicStore.setActionType('code');
-    logicStore.setActionData(
-      "async ({ fsp, vol, repo: { group, project, url } }) => v + ' _test:' + v.length"
-    );
+    logicStore.setActionData(defaultValue);
   }, []);
 
   return (
@@ -34,9 +35,7 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
             minimap: { enabled: false },
             automaticLayout: true,
             renderLineHighlight: 'none',
-            value:
-              value ||
-              "async ({ fsp, vol, repo: { group, project, url } }) => v + ' _test:' + v.length"
+            value: defaultValue
           }}
           onChange={v => setData(v)}
           editorDidMount={editor => {

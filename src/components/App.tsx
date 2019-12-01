@@ -1,4 +1,4 @@
-import { Button, Grid, Icon, Snackbar } from '@material-ui/core';
+import { Button, Grid } from '@material-ui/core';
 import Container from '@material-ui/core/Container';
 import React, { useContext, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
@@ -48,24 +48,6 @@ export const App = hot(() => {
               }}
             >
               GO
-            </Button>
-          </Grid>
-          <Grid
-            container
-            spacing={1}
-            alignItems="flex-end"
-            justify="flex-end"
-            className="submit__button"
-          >
-            <Button
-              variant="outlined"
-              color="secondary"
-              size="large"
-              onClick={() => {
-                scriptStore.test();
-              }}
-            >
-              Test
             </Button>
           </Grid>
         </Grid>

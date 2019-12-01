@@ -72,7 +72,6 @@ export class GitStore extends FormStore {
     const files = (fs as any).vol.toJSON();
     for (const path in files) {
       const coolPath = path.replace('/' + rootDir, '');
-      console.log(coolPath, path);
       !path.includes('.git') ? await f(coolPath) : '';
     }
   }
@@ -91,7 +90,7 @@ export class GitStore extends FormStore {
       project: (r as any)?.groups.project,
       url
     };
-    console.log(repo);
+    // console.log(f);
     await f(fsp, (fs as any).vol, repo);
   }
 
