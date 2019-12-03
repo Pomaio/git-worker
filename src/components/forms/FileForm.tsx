@@ -1,9 +1,10 @@
 import { Grid } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect } from 'react';
 import { StoresContext } from '~/core/stores';
 import { CommonForm } from './CommonForm';
 
-export const FileForm = () => {
+export const FileForm = observer(() => {
   const { logicStore } = useContext(StoresContext);
   useEffect(() => {
     logicStore.setActionType('add');
@@ -18,6 +19,7 @@ export const FileForm = () => {
             placeholder="Тут должен быть полный путь к файлу"
             margin="normal"
             variant="outlined"
+            value={logicStore.actionAppliedFile}
             setStoreValue={v => {
               logicStore.setActionAppliedFile(v);
             }}
@@ -31,6 +33,7 @@ export const FileForm = () => {
             margin="normal"
             multiline
             variant="outlined"
+            value={logicStore.actionData}
             setStoreValue={v => {
               logicStore.setActionData(v);
             }}
@@ -39,4 +42,4 @@ export const FileForm = () => {
       </Grid>
     </>
   );
-};
+});

@@ -21,6 +21,7 @@ export const UrlForm = () => {
         <CommonForm
           label="Git URL"
           fullWidth
+          value={value}
           setStoreValue={v => setValue(v)}
           margin="none"
         />

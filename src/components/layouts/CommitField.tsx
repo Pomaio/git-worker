@@ -19,7 +19,7 @@ export const CommitField = observer(() => {
             label="Username (default: логин)"
             margin="dense"
             variant="outlined"
-            value={logicStore.username}
+            value={logicStore.username || ''}
             setStoreValue={v => logicStore.setUsername(v)}
           />
         </Grid>
@@ -46,6 +46,7 @@ export const CommitField = observer(() => {
           fullWidth
           margin="normal"
           variant="outlined"
+          value={logicStore.commitInfo}
           setStoreValue={v => logicStore.setCommitInfo(v)}
         />
       </Grid>
