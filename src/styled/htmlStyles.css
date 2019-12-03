@@ -3,7 +3,7 @@ body,
 #root {
   margin: 0;
   padding: 0;
-  background: honeydew;
+  background: #3f51b5;
 }
 html {
   overflow-y: scroll;

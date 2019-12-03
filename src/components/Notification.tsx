@@ -5,7 +5,7 @@ import { observer } from 'mobx-react-lite';
 import { StoresContext } from '~/core/stores';
 
 export const Notification = observer(() => {
-  const { scriptStore } = useContext(StoresContext);
+  const { scenarioStore } = useContext(StoresContext);
 
   return (
     <Snackbar
@@ -13,22 +13,22 @@ export const Notification = observer(() => {
         vertical: 'top',
         horizontal: 'right'
       }}
-      open={scriptStore.notificationStatus || false}
-      onClose={() => scriptStore.setNotificationStatus(false)}
+      open={scenarioStore.notificationStatus || false}
+      onClose={() => scenarioStore.setNotificationStatus(false)}
       autoHideDuration={6000}
       ContentProps={{
         'aria-describedby': 'message-id'
       }}
       message={
         <div id="message-id">
-          {scriptStore.notificationMessage || 'Заполнены не все поля!'}
+          {scenarioStore.notificationMessage || 'Заполнены не все поля!'}
         </div>
       }
       action={
         <Button
           color="inherit"
           size="small"
-          onClick={() => scriptStore.setNotificationStatus(false)}
+          onClick={() => scenarioStore.setNotificationStatus(false)}
         >
           <Icon>close</Icon>
         </Button>

@@ -19,7 +19,8 @@ import { StoresContext } from '~/core/stores';
 const Block = styled('div')`
   padding-top: 30px;
   .MuiListItem-button-header {
-    background-color: honeydew;
+    border: 2px solid #c4c4c4;
+    border-radius: 7px;
   }
   .MuiListItemIcon-root {
     min-width: 0;
@@ -30,16 +31,13 @@ const Block = styled('div')`
   }
 `;
 
-export const CollapseRow = observer(() => {
-  const { logicStore } = useContext(StoresContext);
-  const { urlCollection } = logicStore;
-
+export const UrlsList = observer(() => {
+  const { gitStore } = useContext(StoresContext);
+  const { urlCollection } = gitStore;
   const [open, setOpen] = useState(false);
-
   const handleClick = () => {
     urlCollection?.length !== 0 ? setOpen(!open) : setOpen(false);
   };
-
   return (
     <Block>
       <Grid item xs={12}>
@@ -58,7 +56,7 @@ export const CollapseRow = observer(() => {
           <List component="div" disablePadding>
             {urlCollection?.map((v, i) => (
               <ElementRow
-                delete={v => logicStore.deleteUrl(v)}
+                delete={v => gitStore.deleteUrl(v)}
                 label={v}
                 key={v + i}
               />

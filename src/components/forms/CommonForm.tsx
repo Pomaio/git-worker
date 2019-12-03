@@ -11,13 +11,15 @@ export const CommonForm = ({ setStoreValue, value, ...props }: FormProps) => {
 
   useEffect(() => {
     value ? setStoreValue(value) : '';
-  });
+  }, []);
 
   return (
     <TextField
       fullWidth
       value={value || ''}
-      onChange={e => setStoreValue(e.target.value)}
+      onChange={e => {
+        setStoreValue(e.target.value);
+      }}
       error={props.required && value === '' ? true : false}
       {...props}
     />

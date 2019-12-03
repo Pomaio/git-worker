@@ -1,4 +1,4 @@
-image: node:10-stretch
+image: node:12-stretch
 
 pages:
   tags:
@@ -6,9 +6,11 @@ pages:
   stage: deploy
   script:
     - npm ci
+    - npm run build
     - mkdir public
+    - cp -r build/* public
   artifacts:
     paths:
       - public
   only:
-    - develop
+    - master

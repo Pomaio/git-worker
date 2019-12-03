@@ -12,7 +12,7 @@ const CusstomIcon = styled(Icon)`
 `;
 
 export const UrlForm = () => {
-  const { logicStore } = useContext(StoresContext);
+  const { gitStore } = useContext(StoresContext);
   const [value, setValue] = useState('');
 
   return (
@@ -31,7 +31,7 @@ export const UrlForm = () => {
           aria-label="add"
           color="primary"
           size="small"
-          onClick={() => logicStore.pushUrl(value)}
+          onClick={() => gitStore.pushUrl(value)}
         >
           <CusstomIcon>add_circle_outline</CusstomIcon>
         </IconButton>

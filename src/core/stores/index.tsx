@@ -1,16 +1,16 @@
 import { createContext } from 'react';
 import { FormStore } from './FormStore';
 import { GitStore } from './GitStore';
-import { ScriptStore } from './ScriptStore';
+import { ScenarioStore } from './ScenarioStore';
 
-const infoStore = new FormStore();
-const logicStore = new GitStore();
-const scriptStore = new ScriptStore(logicStore);
+const formStore = new FormStore();
+const gitStore = new GitStore();
+const scenarioStore = new ScenarioStore(gitStore);
 
 const StoresContext = createContext({
-  infoStore,
-  logicStore,
-  scriptStore
+  formStore,
+  gitStore,
+  scenarioStore
 });
 
-export { StoresContext, FormStore, GitStore, ScriptStore };
+export { StoresContext, FormStore, GitStore, ScenarioStore };

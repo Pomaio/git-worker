@@ -46,7 +46,7 @@ const cssRule = {
   use: [
     // здесь важно использовать не какой-нибудь
     // style-loader, чтобы styled-components имели
-    // приоритет относительно импортированных стилей antd
+    // приоритет относительно импортированных
     {
       loader: MiniCssExtractPlugin.loader
     },

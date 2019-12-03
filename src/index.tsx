@@ -6,7 +6,7 @@ import { App } from './components/App';
 import { patchLogs } from './patchLogs';
 
 import { configure } from 'mobx';
-import './styled/styleReset.css';
+import './styled/htmlStyles.css';
 
 configure({
   enforceActions: 'observed'

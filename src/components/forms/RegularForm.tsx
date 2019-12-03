@@ -14,19 +14,19 @@ export const RegularForm = observer(() => {
   const [regExp, setRegExp] = useState('');
   const [flags, setFlags] = useState([]);
 
-  const { logicStore } = useContext(StoresContext);
+  const { gitStore } = useContext(StoresContext);
 
   const inputLabel = useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
   useEffect(() => {
     setLabelWidth(inputLabel.current!.offsetWidth);
-    logicStore.setActionType('regexp');
+    gitStore.setActionType('regexp');
   }, []);
 
   useEffect(() => {
     const r = new RegExp(regExp, flags.join(''));
-    logicStore.setActionRegExp(r);
+    gitStore.setActionRegExp(r);
   }, [regExp, flags]);
 
   return (
@@ -59,29 +59,29 @@ export const RegularForm = observer(() => {
             </Select>
           </FormControl>
         </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <CommonForm
-          fullWidth
-          label="Данные замены"
-          multiline
-          margin="normal"
-          variant="outlined"
-          value={logicStore.actionData}
-          setStoreValue={v => logicStore.setActionData(v)}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <CommonForm
-          fullWidth
-          label="Выбор файлов"
-          placeholder="src/**/*.{css,scss}, **/index.js"
-          multiline
-          margin="normal"
-          variant="outlined"
-          value={logicStore.actionAppliedFile}
-          setStoreValue={v => logicStore.setActionAppliedFile(v)}
-        />
+        <Grid item xs={12}>
+          <CommonForm
+            fullWidth
+            label="Данные замены"
+            multiline
+            margin="normal"
+            variant="outlined"
+            value={gitStore.actionData}
+            setStoreValue={v => gitStore.setActionData(v)}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <CommonForm
+            fullWidth
+            label="Выбор файлов"
+            placeholder="src/**/*.{css,scss}, **/index.js"
+            multiline
+            margin="normal"
+            variant="outlined"
+            value={gitStore.actionAppliedFile}
+            setStoreValue={v => gitStore.setActionAppliedFile(v)}
+          />
+        </Grid>
       </Grid>
     </>
   );

@@ -1,30 +1,25 @@
-import { add, clone, commit, plugins, push } from 'isomorphic-git';
-
 import * as fs from 'fs';
-const fsp = fs.promises;
-
+import {
+  add,
+  clone,
+  commit,
+  plugins,
+  push,
+  statusMatrix
+} from 'isomorphic-git';
 import { action } from 'mobx';
+import { dirname, join, relative } from 'path';
 import { FormStore } from './FormStore';
-plugins.set('fs', fs);
 
-const rootDir = 'dir';
+const fsp = fs.promises;
+plugins.set('fs', fs);
 
 export class GitStore extends FormStore {
   @action
   async add() {
-    await this.goCircularRepo(path => {
-      const filepath = path.replace(rootDir + '/', '');
-      add({ dir: rootDir, filepath });
-    });
+    await this.forEachFile(v => add({ dir: '/', filepath: relative('/', v) }));
   }
-  @action
-  async addTestFile(name: string, data: string) {
-    await fsp.writeFile(rootDir + '/' + `${name}`, data);
-  }
-  @action
-  async cleanFolder() {
-    (fs as any).vol.reset();
-  }
+
   @action
   async clone(url: string) {
     const i = {
@@ -32,7 +27,7 @@ export class GitStore extends FormStore {
       password: this.password
     };
     await clone({
-      dir: rootDir,
+      dir: '/',
       url,
       ref: 'master',
       singleBranch: true,
@@ -40,6 +35,7 @@ export class GitStore extends FormStore {
       ...i
     });
   }
+
   @action
   async commit() {
     const i = {
@@ -47,51 +43,47 @@ export class GitStore extends FormStore {
         name: this.username || this.login,
         email: this.email
       },
-      message: this.commitInfo || 'No commit message'
+      message: this.commitInfo || 'Нет сообщения о коммите'
     };
-    await commit({ dir: rootDir, ...i });
+    await commit({ dir: '/', ...i });
   }
 
   @action
-  async goCircularRepo(f?: any) {
-    async function getFiles(dir) {
-      const files = await fsp.readdir(dir);
-      for (const i in files) {
-        const path = dir + '/' + files[i];
-        files[i] !== '.git'
-          ? fs.statSync(path).isDirectory()
-            ? await getFiles(path)
-            : await f(path)
-          : '';
-      }
-    }
-    await getFiles(rootDir);
+  async createFile(path: string, data: string) {
+    await fsp.mkdir(dirname(path), { recursive: true });
+    await fsp.writeFile(join('/', path), data);
   }
+
   @action
-  async goRepo(f?: any) {
-    const files = (fs as any).vol.toJSON();
-    for (const path in files) {
-      const coolPath = path.replace('/' + rootDir, '');
-      !path.includes('.git') ? await f(coolPath) : '';
-    }
+  async forEachFile(fn?: (path: string) => Promise<void>) {
+    const files = Reflect.ownKeys((fs as any).vol.toJSON()) as string[];
+    await Promise.all(
+      files.map(v => (v.includes('.git') ? Promise.resolve() : fn?.(v)))
+    );
+  }
+
+  async hasUnstaged() {
+    return (await statusMatrix({ dir: '/', pattern: '**/*' })).some(
+      v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1
+    );
   }
 
   @action
   async modifyFile(path: string, f: any) {
-    const coolPath = '/' + rootDir + path;
+    const coolPath = join('/', path);
     const file = (await fsp.readFile(coolPath)).toString();
     await fsp.writeFile(coolPath, f(file));
   }
+
   @action
-  async modifyScript(url: string, f: any) {
+  async modifyScript(url: string, fn: (context: any) => Promise<void>) {
     const r = url.match(/\w+\/(?<group>\S+)\/(?<project>\S+)/);
     const repo = {
       group: (r as any)?.groups.group,
       project: (r as any)?.groups.project,
       url
     };
-    // console.log(f);
-    await f(fsp, (fs as any).vol, repo);
+    await fn({ fsp, vol: (fs as any).vol, repo });
   }
 
   @action
@@ -101,10 +93,15 @@ export class GitStore extends FormStore {
       password: this.password
     };
     await push({
-      dir: rootDir,
+      dir: '/',
       url,
       ref: 'master',
       ...i
     });
+  }
+
+  @action
+  async reset() {
+    (fs as any).vol.reset();
   }
 }

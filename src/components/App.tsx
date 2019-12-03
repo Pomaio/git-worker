@@ -23,8 +23,8 @@ const StyledContainer = styled(Container)`
   }
 `;
 export const App = hot(() => {
-  const { scriptStore, logicStore } = useContext(StoresContext);
-  useEffect(() => logicStore.fetchVariables());
+  const { scenarioStore, gitStore } = useContext(StoresContext);
+  useEffect(() => gitStore.extractVariables(), []);
   return (
     <>
       <StyledContainer maxWidth="md">
@@ -44,7 +44,7 @@ export const App = hot(() => {
               color="secondary"
               size="large"
               onClick={() => {
-                scriptStore.start();
+                scenarioStore.start();
               }}
             >
               GO

@@ -9,15 +9,16 @@ interface EditorProps extends MonacoEditorProps {
   value?: string;
 }
 export const EditorField = ({ value, ...editorProp }: EditorProps) => {
-  const { logicStore } = useContext(StoresContext);
-  const [data, setData] = useState('');
-  const defaultValue =
-    value || 'async ( fsp, vol, repo) => console.log(vol.toJSON())';
+  const { gitStore } = useContext(StoresContext);
+  const initialValue =
+    value || 'async ({ fsp, vol, repo }) => console.log(vol.toJSON())';
 
-  useDebounce(() => logicStore.setActionData(data), 1000, [data]);
+  const [data, setData] = useState(initialValue);
+
+  useDebounce(() => gitStore.setActionData(data), 1000, [data]);
   useEffect(() => {
-    logicStore.setActionType('code');
-    logicStore.setActionData(defaultValue);
+    gitStore.setActionType('code');
+    gitStore.setActionData(initialValue);
   }, []);
 
   return (
@@ -35,7 +36,7 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
             minimap: { enabled: false },
             automaticLayout: true,
             renderLineHighlight: 'none',
-            value: defaultValue
+            value: initialValue
           }}
           onChange={v => setData(v)}
           editorDidMount={editor => {

@@ -1,7 +1,3 @@
-// import fg from 'fast-glob';
-// import fs from 'fs';
-// const path = require('path');
-// const custom_fs = { globSync: fg.sync, ...fs };
 const mm = require('micromatch');
 
 export const glob = (
@@ -13,8 +9,3 @@ export const glob = (
 export const globMatch = (path: string, patterns: string[]): boolean => {
   return mm.isMatch(path, patterns);
 };
-// больше информации тут
-// https://github.com/micromatch/micromatch#micromatch
-
-// const entries = custom_fs.globSync(['*'], { stats: true, cwd: '/dir' });
-// console.log(entries);

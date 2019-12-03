@@ -1,7 +1,6 @@
 import { action, observable } from 'mobx';
 
 export class FormStore {
-  //variable
   @observable
   actionAppliedFile?: string;
 
@@ -34,7 +33,6 @@ export class FormStore {
   @observable
   username?: string;
 
-  // action function
   @action
   deleteUrl(url: string) {
     const r = (this.urlCollection || []).filter(elem => elem !== url);
@@ -43,8 +41,9 @@ export class FormStore {
       this.setUrlCollection(r);
     }
   }
+
   @action
-  fetchVariables() {
+  extractVariables() {
     const fnPick = (name: string) =>
       ({
         login: v => this.setLogin(v),
@@ -55,7 +54,9 @@ export class FormStore {
       }[name]);
     this.savedVariable.forEach(v => {
       const r = localStorage.getItem(v);
-      if (r) fnPick(v)(JSON.parse(r));
+      if (r) {
+        fnPick(v)(JSON.parse(r));
+      }
     });
   }
 
@@ -84,35 +85,36 @@ export class FormStore {
     });
   }
 
-  // function set
   @action
   setActionAppliedFile(actionAppliedFile?: string) {
-    if (actionAppliedFile) this.actionAppliedFile = actionAppliedFile;
+    this.actionAppliedFile = actionAppliedFile;
   }
 
   @action
   setActionData(actionData?: string) {
-    if (actionData) this.actionData = actionData;
+    this.actionData = actionData;
   }
 
   @action
   setActionRegExp(actionRegExp?: RegExp) {
-    if (actionRegExp) this.actionRegExp = actionRegExp;
+    this.actionRegExp = actionRegExp;
   }
 
   @action
   setActionType(actionType?: string) {
-    if (actionType) this.actionType = actionType;
+    this.actionType = actionType;
   }
 
   @action
   setCommitInfo(commitInfo?: string) {
     this.commitInfo = commitInfo;
   }
+
   @action
   setEmail(email?: string) {
-    if (email) this.email = email;
+    this.email = email;
   }
+
   @action
   setLocalStorage(name: string, value: any) {
     if (value) {
@@ -122,11 +124,12 @@ export class FormStore {
 
   @action
   setLogin(login?: string) {
-    if (login) this.login = login;
+    this.login = login;
   }
+
   @action
   setPassword(password?: string) {
-    if (password) this.password = password;
+    this.password = password;
   }
 
   @action
@@ -136,6 +139,6 @@ export class FormStore {
 
   @action
   setUsername(username?: string) {
-    if (username) this.username = username;
+    this.username = username;
   }
 }
