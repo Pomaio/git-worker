@@ -1,8 +1,8 @@
 import { action, observable } from 'mobx';
-import { globMatch, translateVar } from '~/utils';
-import { GitStore } from './GitStore';
 import { isAbsolute, join } from 'path';
-import { isValidForm, getUnvalidVar } from '~/utils/validator';
+import { globMatch, translateVar } from '~/utils';
+import { getUnvalidFormVar, isValidForm } from '~/utils/validator';
+import { GitStore } from './GitStore';
 
 const saferEval = require('safer-eval');
 
@@ -91,7 +91,7 @@ export class ScenarioStore {
     const isValid = isValidForm(this.gitStore);
     if (!isValid) {
       await this.setNotificationMessage(
-        'Поля не заполнены: ' + getUnvalidVar(this.gitStore).join(', ')
+        'Поля не заполнены: ' + getUnvalidFormVar(this.gitStore).join(', ')
       );
       await this.setNotificationStatus(true);
     }

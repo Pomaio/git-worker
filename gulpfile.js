@@ -18,10 +18,6 @@ const output = {
   }
 };
 
-//
-// DEFAULT
-//
-
 task('build', () => {
   return merge(
     src('./src/index.tsx').pipe(webpack(webpackConfig, webpackCompiler)),
