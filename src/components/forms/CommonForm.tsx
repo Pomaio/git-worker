@@ -2,7 +2,7 @@ import { TextField } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField/TextField';
 import React, { useEffect, useState } from 'react';
 
-type FormProps = TextFieldProps & { setStoreValue?: any };
+type FormProps = TextFieldProps & { setStoreValue: any; value: any };
 
 export const CommonForm = ({ setStoreValue, value, ...props }: FormProps) => {
   if (!setStoreValue) {

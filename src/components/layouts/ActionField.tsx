@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 
 import {
   BottomNavigation,
@@ -10,10 +10,12 @@ import {
 
 import { EditorField } from '~/components/forms/EditorForm';
 import { RegularForm } from '~/components/forms/RegularForm';
+import { StoresContext } from '~/core/stores';
 import { FileForm } from '../forms/FileForm';
 
 export const ActionField = () => {
   const [tab, setTab] = useState('add');
+  const { logicStore } = useContext(StoresContext);
 
   return (
     <Box>
@@ -24,6 +26,7 @@ export const ActionField = () => {
         value={tab}
         onChange={(event, newValue) => {
           setTab(newValue);
+          logicStore.resetActionData();
         }}
         showLabels
       >

@@ -37,7 +37,7 @@ export const CollapseRow = observer(() => {
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
-    setOpen(!open);
+    urlCollection?.length !== 0 ? setOpen(!open) : setOpen(false);
   };
 
   return (

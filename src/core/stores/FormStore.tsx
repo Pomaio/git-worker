@@ -62,10 +62,21 @@ export class FormStore {
   @action
   pushUrl(url: string) {
     if (url !== '') {
-      this.urlCollection = [...(this.urlCollection || []), url];
-      this.setLocalStorage('urlCollection', this.urlCollection);
+      if (!this.urlCollection?.includes(url)) {
+        this.urlCollection = [...(this.urlCollection || []), url];
+        this.setLocalStorage('urlCollection', this.urlCollection);
+      } else {
+        console.warn('Такой url уже имеется в списке!');
+      }
     }
   }
+  @action
+  resetActionData() {
+    this.actionData = '';
+    this.actionAppliedFile = '';
+    this.actionRegExp = undefined;
+  }
+
   @action
   saveFormVariables() {
     this.savedVariable.forEach(v => {

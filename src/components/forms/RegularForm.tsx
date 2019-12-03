@@ -5,11 +5,12 @@ import {
   MenuItem,
   Select
 } from '@material-ui/core';
+import { observer } from 'mobx-react-lite';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { StoresContext } from '~/core/stores';
 import { CommonForm } from './CommonForm';
 
-export const RegularForm = () => {
+export const RegularForm = observer(() => {
   const [regExp, setRegExp] = useState('');
   const [flags, setFlags] = useState([]);
 
@@ -39,6 +40,7 @@ export const RegularForm = () => {
             multiline
             margin="normal"
             variant="outlined"
+            value={regExp}
             setStoreValue={v => setRegExp(v)}
           />
         </Grid>
@@ -65,6 +67,7 @@ export const RegularForm = () => {
           multiline
           margin="normal"
           variant="outlined"
+          value={logicStore.actionData}
           setStoreValue={v => logicStore.setActionData(v)}
         />
       </Grid>
@@ -76,9 +79,10 @@ export const RegularForm = () => {
           multiline
           margin="normal"
           variant="outlined"
+          value={logicStore.actionAppliedFile}
           setStoreValue={v => logicStore.setActionAppliedFile(v)}
         />
       </Grid>
     </>
   );
-};
+});

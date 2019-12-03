@@ -46,10 +46,6 @@ export const EditorField = ({ value, ...editorProp }: EditorProps) => {
             model.updateOptions({
               tabSize: 2
             });
-
-            setTimeout(() => {
-              editor.getAction('editor.action.formatDocument').run();
-            }, 1000);
           }}
           {...editorProp}
         />
