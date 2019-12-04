@@ -47,22 +47,26 @@ export class ScenarioStore {
 
   @action
   async scriptStart(script: any, url: string) {
-    this.logStore.log('info', `Cloning into ${url}`);
-    await this.gitStore.clone(url);
-    this.logStore.log('info', `Staring scenario`);
-    await script(url);
-    this.logStore.log('info', `Adding files`);
-    await this.gitStore.add();
-    const hasUnstaged = await this.gitStore.hasUnstaged();
-    if (hasUnstaged) {
-      this.logStore.log('info', `Has changes, committing`);
-      await this.gitStore.commit();
-      this.logStore.log('info', `Pushing`);
-      await this.gitStore.push(url);
+    try {
+      this.logStore.log('info', `Cloning into ${url}`);
+      await this.gitStore.clone(url);
+      this.logStore.log('info', `Staring scenario`);
+      await script(url);
+      this.logStore.log('info', `Adding files`);
+      await this.gitStore.add();
+      const hasUnstaged = await this.gitStore.hasUnstaged();
+      if (hasUnstaged) {
+        this.logStore.log('info', `Has changes, committing`);
+        await this.gitStore.commit();
+        this.logStore.log('info', `Pushing`);
+        await this.gitStore.push(url);
+      } else {
+        this.logStore.log('info', `Everything is up-to-date, skipping`);
+      }
+      this.logStore.log('info', `Finished ${url}\n`);
+    } catch (e) {
+      this.logStore.log('error', `\n${e.toString()}\n`);
     }
-    this.logStore.log('info', `Finished ${url}`);
-    // await this.setNotificationMessage('Выполнено: ' + progress);
-    // this.setNotificationStatus(true);
   }
 
   @action

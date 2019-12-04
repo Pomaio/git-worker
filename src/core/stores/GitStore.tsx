@@ -5,6 +5,7 @@ import {
   commit,
   plugins,
   push,
+  status,
   statusMatrix
 } from 'isomorphic-git';
 import { action } from 'mobx';
@@ -17,7 +18,15 @@ plugins.set('fs', fs);
 export class GitStore extends FormStore {
   @action
   async add() {
-    await this.forEachFile(v => add({ dir: '/', filepath: relative('/', v) }));
+    await this.forEachFile(async v => {
+      const s = await status({
+        dir: '/',
+        filepath: relative('/', v)
+      });
+      if (s !== 'unmodified' && s !== 'ignored') {
+        add({ dir: '/', filepath: relative('/', v) });
+      }
+    });
   }
 
   @action
@@ -87,15 +96,15 @@ export class GitStore extends FormStore {
 
   @action
   async push(url: string) {
-    const i = {
-      username: this.login,
-      password: this.password
-    };
-    await push({
+    const r = await push({
       dir: '/',
       url,
-      ...i
+      username: this.login,
+      password: this.password
     });
+    if (r && r.errors && r.errors.length > 0) {
+      throw r.errors;
+    }
   }
 
   @action
