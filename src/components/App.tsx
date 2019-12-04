@@ -4,6 +4,7 @@ import React, { useContext, useEffect } from 'react';
 import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { StoresContext } from '~/core/stores';
+import { LogHolder } from './LogHolder';
 import { Notification } from './Notification';
 import { ActionField } from './layouts/ActionField';
 import { AuthField } from './layouts/AuthField';
@@ -11,6 +12,7 @@ import { CommitField } from './layouts/CommitField';
 
 const StyledContainer = styled(Container)`
   background: white;
+  padding-bottom: 20px;
   min-height: 100vh;
   .MuiBox-root {
     margin: 25px 0;
@@ -22,6 +24,7 @@ const StyledContainer = styled(Container)`
     padding-bottom: 30px;
   }
 `;
+
 export const App = hot(() => {
   const { scenarioStore, gitStore } = useContext(StoresContext);
   useEffect(() => gitStore.extractVariables(), []);
@@ -51,6 +54,7 @@ export const App = hot(() => {
             </Button>
           </Grid>
         </Grid>
+        <LogHolder />
       </StyledContainer>
       <Notification />
     </>

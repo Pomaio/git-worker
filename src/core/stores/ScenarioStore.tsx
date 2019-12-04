@@ -3,6 +3,7 @@ import { isAbsolute, join } from 'path';
 import { globMatch, translateVar } from '~/utils';
 import { getUnvalidFormVar, isValidForm } from '~/utils/validator';
 import { GitStore } from './GitStore';
+import { LogStore } from './LogStore';
 
 const saferEval = require('safer-eval');
 
@@ -13,16 +14,20 @@ export class ScenarioStore {
   @observable
   notificationStatus?: boolean;
 
-  constructor(protected gitStore: GitStore) {}
+  constructor(protected logStore: LogStore, protected gitStore: GitStore) {}
 
   @action
   async scriptAddFile(url: string) {
-    this.gitStore?.actionAppliedFile && this.gitStore?.actionData
-      ? await this.gitStore.createFile(
-          this.gitStore?.actionAppliedFile,
-          this.gitStore?.actionData
-        )
-      : await this.setNotificationStatus(true);
+    this.logStore.log(
+      'info',
+      `Creating file ${this.gitStore?.actionAppliedFile}`
+    );
+    if (this.gitStore?.actionAppliedFile && this.gitStore?.actionData) {
+      await this.gitStore.createFile(
+        this.gitStore?.actionAppliedFile,
+        this.gitStore?.actionData
+      );
+    }
   }
 
   @action
@@ -41,17 +46,23 @@ export class ScenarioStore {
   }
 
   @action
-  async scriptStart(script: any, url: string, progress?: string) {
+  async scriptStart(script: any, url: string) {
+    this.logStore.log('info', `Cloning into ${url}`);
     await this.gitStore.clone(url);
+    this.logStore.log('info', `Staring scenario`);
     await script(url);
+    this.logStore.log('info', `Adding files`);
     await this.gitStore.add();
     const hasUnstaged = await this.gitStore.hasUnstaged();
     if (hasUnstaged) {
+      this.logStore.log('info', `Has changes, committing`);
       await this.gitStore.commit();
+      this.logStore.log('info', `Pushing`);
       await this.gitStore.push(url);
     }
-    await this.setNotificationMessage('Выполнено: ' + progress);
-    this.setNotificationStatus(true);
+    this.logStore.log('info', `Finished ${url}`);
+    // await this.setNotificationMessage('Выполнено: ' + progress);
+    // this.setNotificationStatus(true);
   }
 
   @action
@@ -81,10 +92,10 @@ export class ScenarioStore {
       add: u => this.scriptAddFile(u),
       code: u => this.scriptСode(u)
     }[this.gitStore.actionType || ''];
-    this.gitStore.urlCollection?.forEach(async (url, i) => {
-      const progress = `${i + 1}/${this.gitStore.urlCollection?.length}`;
-      await this.scriptStart(fn, url, progress);
-    });
+
+    for (const url of this.gitStore.urlCollection || []) {
+      await this.scriptStart(fn, url);
+    }
   }
 
   async validation() {
