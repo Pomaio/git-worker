@@ -29,7 +29,6 @@ export class GitStore extends FormStore {
     await clone({
       dir: '/',
       url,
-      ref: 'master',
       singleBranch: true,
       depth: 1,
       ...i
@@ -95,7 +94,6 @@ export class GitStore extends FormStore {
     await push({
       dir: '/',
       url,
-      ref: 'master',
       ...i
     });
   }
