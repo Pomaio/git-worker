@@ -31,16 +31,12 @@ export class GitStore extends FormStore {
 
   @action
   async clone(url: string) {
-    const i = {
-      username: this.login,
-      password: this.password
-    };
     await clone({
       dir: '/',
       url,
-      singleBranch: true,
-      depth: 1,
-      ...i
+      // singleBranch: true,
+      username: this.login,
+      password: this.password
     });
   }
 
@@ -96,6 +92,13 @@ export class GitStore extends FormStore {
 
   @action
   async push(url: string) {
+    const json = (fs as any).vol.toJSON();
+    Reflect.ownKeys(json).forEach(k => {
+      if (k.startsWith('/.git')) {
+        console.log();
+      }
+    });
+
     const r = await push({
       dir: '/',
       url,
@@ -110,5 +113,8 @@ export class GitStore extends FormStore {
   @action
   async reset() {
     (fs as any).vol.reset();
+    (fs as any).vol.fromJSON({
+      '/': null
+    });
   }
 }

@@ -48,6 +48,7 @@ export class ScenarioStore {
   @action
   async scriptStart(script: any, url: string) {
     try {
+      this.gitStore.reset();
       this.logStore.log('info', `Cloning into ${url}`);
       await this.gitStore.clone(url);
       this.logStore.log('info', `Staring scenario`);
