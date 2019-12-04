@@ -12,19 +12,16 @@ const package = require('./package.json');
 const output = {
   artifactName:
     `${(process.env.BASE_URL || package.name).replace(/\//g, '')}` +
-    `##${package.version}.war`,
-  paths: {
-    api: path.resolve(__dirname, './.tmp/api')
-  }
+    `##${package.version}.war`
 };
 
 task('build', () => {
   return merge(
     src('./src/index.tsx').pipe(webpack(webpackConfig, webpackCompiler)),
     src('./extras/**/*').pipe(template(process.env))
-  )
-    .pipe(zip(output.artifactName))
-    .pipe(dest('build'));
+  ).pipe(dest('build'));
+  // .pipe(zip(output.artifactName)) build war
+  // .pipe(dest('build'));
 });
 
 task('start', cb => {
