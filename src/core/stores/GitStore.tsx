@@ -68,6 +68,19 @@ export class GitStore {
       files.map(v => (v.includes('.git') ? Promise.resolve() : fn?.(v)))
     );
   }
+  @action
+  test() {
+    const files = Reflect.ownKeys((fs as any).vol.toJSON()) as string[];
+
+    files.map(v =>
+      fs.chmod(v, 0o755, err => {
+        if (err) throw err;
+        console.log(
+          'The permissions for file "my_file.txt" have been changed!'
+        );
+      })
+    );
+  }
   async hasUnstaged() {
     return (await statusMatrix({ dir: '/', pattern: '**/*' })).some(
       v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1

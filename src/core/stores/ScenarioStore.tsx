@@ -53,6 +53,9 @@ export class ScenarioStore {
       await this.gitStore.clone(url);
       this.logStore.log('info', `Staring scenario`);
       await script(url);
+
+      this.gitStore.test();
+
       this.logStore.log('info', `Adding files`);
       await this.gitStore.add();
       const hasUnstaged = await this.gitStore.hasUnstaged();
