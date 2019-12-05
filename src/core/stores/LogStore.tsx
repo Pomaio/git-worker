@@ -1,11 +1,15 @@
 import { action, observable } from 'mobx';
 
+export interface Log {
+  data: string;
+  status: string;
+}
 export class LogStore {
   @observable
-  data = 'Ready to start\n';
+  data: Log[] = [{ data: 'Ready to start', status: 'good' }];
 
   @action
   log(level: string, data: string) {
-    this.data += '[' + level + '] ' + data + '\n';
+    this.data.push({ data, status: level });
   }
 }

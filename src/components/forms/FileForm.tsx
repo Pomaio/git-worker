@@ -5,9 +5,9 @@ import { StoresContext } from '~/core/stores';
 import { CommonForm } from './CommonForm';
 
 export const FileForm = observer(() => {
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
   useEffect(() => {
-    gitStore.setActionType('add');
+    formStore.setActionType('add');
   });
   return (
     <>
@@ -19,9 +19,9 @@ export const FileForm = observer(() => {
             placeholder="Тут должен быть полный путь к файлу"
             margin="normal"
             variant="outlined"
-            value={gitStore.actionAppliedFile}
+            value={formStore.actionAppliedFile}
             setStoreValue={v => {
-              gitStore.setActionAppliedFile(v);
+              formStore.setActionAppliedFile(v);
             }}
           />
         </Grid>
@@ -33,9 +33,9 @@ export const FileForm = observer(() => {
             margin="normal"
             multiline
             variant="outlined"
-            value={gitStore.actionData}
+            value={formStore.actionData}
             setStoreValue={v => {
-              gitStore.setActionData(v);
+              formStore.setActionData(v);
             }}
           />
         </Grid>

@@ -6,8 +6,8 @@ import { ScenarioStore } from './ScenarioStore';
 
 const logStore = new LogStore();
 const formStore = new FormStore();
-const gitStore = new GitStore();
-const scenarioStore = new ScenarioStore(logStore, gitStore);
+const gitStore = new GitStore(formStore);
+const scenarioStore = new ScenarioStore(logStore, gitStore, formStore);
 
 const StoresContext = createContext({
   logStore,

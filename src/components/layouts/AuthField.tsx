@@ -7,7 +7,7 @@ import { UrlForm } from '~/components/forms/UrlForm';
 import { StoresContext } from '~/core/stores';
 
 export const AuthField = observer(() => {
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
   return (
     <Box>
       <Typography variant="h5" component="h5">
@@ -21,8 +21,8 @@ export const AuthField = observer(() => {
             required
             margin="dense"
             variant="outlined"
-            value={gitStore.login || ''}
-            setStoreValue={v => gitStore.setLogin(v)}
+            value={formStore.login || ''}
+            setStoreValue={v => formStore.setLogin(v)}
           />
         </Grid>
         <Grid item xs={6}>
@@ -32,8 +32,8 @@ export const AuthField = observer(() => {
             required
             margin="dense"
             variant="outlined"
-            value={gitStore.password || ''}
-            setStoreValue={v => gitStore.setPassword(v)}
+            value={formStore.password || ''}
+            setStoreValue={v => formStore.setPassword(v)}
           />
         </Grid>
       </Grid>

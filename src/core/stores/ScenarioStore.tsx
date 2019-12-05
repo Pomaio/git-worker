@@ -2,43 +2,42 @@ import { action, observable } from 'mobx';
 import { isAbsolute, join } from 'path';
 import { globMatch, translateVar } from '~/utils';
 import { getUnvalidFormVar, isValidForm } from '~/utils/validator';
+import { FormStore } from './FormStore';
 import { GitStore } from './GitStore';
 import { LogStore } from './LogStore';
 
 const saferEval = require('safer-eval');
 
 export class ScenarioStore {
-  @observable
-  notificationMessage?: string;
-
-  @observable
-  notificationStatus?: boolean;
-
-  constructor(protected logStore: LogStore, protected gitStore: GitStore) {}
+  constructor(
+    protected logStore: LogStore,
+    protected gitStore: GitStore,
+    protected formStore: FormStore
+  ) {}
 
   @action
   async scriptAddFile(url: string) {
     this.logStore.log(
       'info',
-      `Creating file ${this.gitStore?.actionAppliedFile}`
+      `Creating file ${this.formStore?.actionAppliedFile}`
     );
-    if (this.gitStore?.actionAppliedFile && this.gitStore?.actionData) {
+    if (this.formStore?.actionAppliedFile && this.formStore?.actionData) {
       await this.gitStore.createFile(
-        this.gitStore?.actionAppliedFile,
-        this.gitStore?.actionData
+        this.formStore?.actionAppliedFile,
+        this.formStore?.actionData
       );
     }
   }
 
   @action
   async scriptRegExp(url: string) {
-    const pattern = this.gitStore.actionAppliedFile
+    const pattern = this.formStore.actionAppliedFile
       ?.split(',')
       .map(v => v.trim())
       .map(v => (isAbsolute(v) ? v : join('/', v))) || ['*'];
 
     const fn = v =>
-      v.replace(this.gitStore?.actionRegExp, this.gitStore?.actionData);
+      v.replace(this.formStore?.actionRegExp, this.formStore?.actionData);
 
     await this.gitStore.forEachFile(async path => {
       globMatch(path, pattern) ? this.gitStore.modifyFile(path, fn) : null;
@@ -48,6 +47,7 @@ export class ScenarioStore {
   @action
   async scriptStart(script: any, url: string) {
     try {
+      this.logStore.log('', '');
       this.gitStore.reset();
       this.logStore.log('info', `Cloning into ${url}`);
       await this.gitStore.clone(url);
@@ -59,12 +59,13 @@ export class ScenarioStore {
       if (hasUnstaged) {
         this.logStore.log('info', `Has changes, committing`);
         await this.gitStore.commit();
+
         this.logStore.log('info', `Pushing`);
         await this.gitStore.push(url);
       } else {
-        this.logStore.log('info', `Everything is up-to-date, skipping`);
+        this.logStore.log('warning', `Everything is up-to-date, skipping`);
       }
-      this.logStore.log('info', `Finished ${url}\n`);
+      this.logStore.log('good', `Finished ${url}\n`);
     } catch (e) {
       this.logStore.log('error', `\n${e.toString()}\n`);
     }
@@ -72,18 +73,8 @@ export class ScenarioStore {
 
   @action
   async scriptСode(url: string) {
-    const fn = saferEval(this.gitStore.actionData || '');
+    const fn = saferEval(this.formStore.actionData || '');
     await this.gitStore.modifyScript(url, fn);
-  }
-
-  @action
-  async setNotificationMessage(notificationMessage?: string) {
-    this.notificationMessage = notificationMessage;
-  }
-
-  @action
-  async setNotificationStatus(status?: boolean) {
-    this.notificationStatus = status;
   }
 
   @action
@@ -91,25 +82,25 @@ export class ScenarioStore {
     if (!(await this.validation())) {
       return;
     }
-    this.gitStore.saveFormVariables();
+    this.formStore.saveFormVariables();
     const fn = {
       regexp: u => this.scriptRegExp(u),
       add: u => this.scriptAddFile(u),
       code: u => this.scriptСode(u)
-    }[this.gitStore.actionType || ''];
+    }[this.formStore.actionType || ''];
 
-    for (const url of this.gitStore.urlCollection || []) {
+    for (const url of this.formStore.urlCollection || []) {
       await this.scriptStart(fn, url);
     }
   }
 
   async validation() {
-    const isValid = isValidForm(this.gitStore);
+    const isValid = isValidForm(this.formStore);
     if (!isValid) {
-      await this.setNotificationMessage(
-        'Поля не заполнены: ' + getUnvalidFormVar(this.gitStore).join(', ')
+      this.logStore.log(
+        'warning',
+        'Поля не заполнены: ' + getUnvalidFormVar(this.formStore).join(', ')
       );
-      await this.setNotificationStatus(true);
     }
     return isValid;
   }

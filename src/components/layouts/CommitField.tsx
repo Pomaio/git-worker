@@ -6,7 +6,7 @@ import { CommonForm } from '~/components/forms/CommonForm';
 import { StoresContext } from '~/core/stores';
 
 export const CommitField = observer(() => {
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
   return (
     <Box>
       <Typography variant="h5" component="h5">
@@ -19,8 +19,8 @@ export const CommitField = observer(() => {
             label="Username (default: логин)"
             margin="dense"
             variant="outlined"
-            value={gitStore.username || ''}
-            setStoreValue={v => gitStore.setUsername(v)}
+            value={formStore.username || ''}
+            setStoreValue={v => formStore.setUsername(v)}
           />
         </Grid>
         <Grid item xs={6}>
@@ -30,8 +30,8 @@ export const CommitField = observer(() => {
             required
             margin="dense"
             variant="outlined"
-            value={gitStore.email || ''}
-            setStoreValue={v => gitStore.setEmail(v)}
+            value={formStore.email || ''}
+            setStoreValue={v => formStore.setEmail(v)}
           />
         </Grid>
       </Grid>
@@ -46,8 +46,8 @@ export const CommitField = observer(() => {
           fullWidth
           margin="normal"
           variant="outlined"
-          value={gitStore.commitInfo}
-          setStoreValue={v => gitStore.setCommitInfo(v)}
+          value={formStore.commitInfo}
+          setStoreValue={v => formStore.setCommitInfo(v)}
         />
       </Grid>
     </Box>

@@ -15,7 +15,7 @@ import { FileForm } from '../forms/FileForm';
 
 export const ActionField = () => {
   const [tab, setTab] = useState('add');
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
 
   return (
     <Box>
@@ -26,7 +26,7 @@ export const ActionField = () => {
         value={tab}
         onChange={(event, newValue) => {
           setTab(newValue);
-          gitStore.resetActionData();
+          formStore.resetActionData();
         }}
         showLabels
       >

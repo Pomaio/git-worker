@@ -32,8 +32,8 @@ const Block = styled('div')`
 `;
 
 export const UrlsList = observer(() => {
-  const { gitStore } = useContext(StoresContext);
-  const { urlCollection } = gitStore;
+  const { formStore } = useContext(StoresContext);
+  const { urlCollection } = formStore;
   const [open, setOpen] = useState(false);
   const handleClick = () => {
     urlCollection?.length !== 0 ? setOpen(!open) : setOpen(false);
@@ -56,7 +56,7 @@ export const UrlsList = observer(() => {
           <List component="div" disablePadding>
             {urlCollection?.map((v, i) => (
               <ElementRow
-                delete={v => gitStore.deleteUrl(v)}
+                delete={v => formStore.deleteUrl(v)}
                 label={v}
                 key={v + i}
               />

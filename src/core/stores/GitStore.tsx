@@ -15,7 +15,8 @@ import { FormStore } from './FormStore';
 const fsp = fs.promises;
 plugins.set('fs', fs);
 
-export class GitStore extends FormStore {
+export class GitStore {
+  constructor(protected formStore: FormStore) {}
   @action
   async add() {
     await this.forEachFile(async v => {
@@ -23,6 +24,7 @@ export class GitStore extends FormStore {
         dir: '/',
         filepath: relative('/', v)
       });
+      console.log('path:', v, ' status:', s);
       if (s !== 'unmodified' && s !== 'ignored') {
         add({ dir: '/', filepath: relative('/', v) });
       }
@@ -34,22 +36,23 @@ export class GitStore extends FormStore {
     await clone({
       dir: '/',
       url,
-      // singleBranch: true,
-      username: this.login,
-      password: this.password
+      singleBranch: true,
+      depth: 1,
+      username: this.formStore.login,
+      password: this.formStore.password
     });
   }
 
   @action
   async commit() {
-    const i = {
+    await commit({
+      dir: '/',
       author: {
-        name: this.username || this.login,
-        email: this.email
+        name: this.formStore.username || this.formStore.login,
+        email: this.formStore.email
       },
-      message: this.commitInfo || 'Нет сообщения о коммите'
-    };
-    await commit({ dir: '/', ...i });
+      message: this.formStore.commitInfo || 'Нет сообщения о коммите'
+    });
   }
 
   @action
@@ -65,7 +68,6 @@ export class GitStore extends FormStore {
       files.map(v => (v.includes('.git') ? Promise.resolve() : fn?.(v)))
     );
   }
-
   async hasUnstaged() {
     return (await statusMatrix({ dir: '/', pattern: '**/*' })).some(
       v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1
@@ -94,7 +96,7 @@ export class GitStore extends FormStore {
   async push(url: string) {
     const json = (fs as any).vol.toJSON();
     Reflect.ownKeys(json).forEach(k => {
-      if (k.startsWith('/.git')) {
+      if ((k as any).startsWith('/.git')) {
         console.log();
       }
     });
@@ -102,8 +104,8 @@ export class GitStore extends FormStore {
     const r = await push({
       dir: '/',
       url,
-      username: this.login,
-      password: this.password
+      username: this.formStore.login,
+      password: this.formStore.password
     });
     if (r && r.errors && r.errors.length > 0) {
       throw r.errors;
@@ -111,10 +113,17 @@ export class GitStore extends FormStore {
   }
 
   @action
-  async reset() {
+  reset() {
     (fs as any).vol.reset();
     (fs as any).vol.fromJSON({
       '/': null
     });
+  }
+
+  async status() {
+    const r = await (await statusMatrix({ dir: '/', pattern: '**/*' })).filter(
+      v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1
+    );
+    console.log(r);
   }
 }

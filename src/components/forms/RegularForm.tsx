@@ -14,19 +14,19 @@ export const RegularForm = observer(() => {
   const [regExp, setRegExp] = useState('');
   const [flags, setFlags] = useState([]);
 
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
 
   const inputLabel = useRef<HTMLLabelElement>(null);
   const [labelWidth, setLabelWidth] = useState(0);
 
   useEffect(() => {
     setLabelWidth(inputLabel.current!.offsetWidth);
-    gitStore.setActionType('regexp');
+    formStore.setActionType('regexp');
   }, []);
 
   useEffect(() => {
     const r = new RegExp(regExp, flags.join(''));
-    gitStore.setActionRegExp(r);
+    formStore.setActionRegExp(r);
   }, [regExp, flags]);
 
   return (
@@ -66,8 +66,8 @@ export const RegularForm = observer(() => {
             multiline
             margin="normal"
             variant="outlined"
-            value={gitStore.actionData}
-            setStoreValue={v => gitStore.setActionData(v)}
+            value={formStore.actionData}
+            setStoreValue={v => formStore.setActionData(v)}
           />
         </Grid>
         <Grid item xs={12}>
@@ -78,8 +78,8 @@ export const RegularForm = observer(() => {
             multiline
             margin="normal"
             variant="outlined"
-            value={gitStore.actionAppliedFile}
-            setStoreValue={v => gitStore.setActionAppliedFile(v)}
+            value={formStore.actionAppliedFile}
+            setStoreValue={v => formStore.setActionAppliedFile(v)}
           />
         </Grid>
       </Grid>

@@ -5,7 +5,6 @@ import { hot } from 'react-hot-loader/root';
 import styled from 'styled-components';
 import { StoresContext } from '~/core/stores';
 import { LogHolder } from './LogHolder';
-import { Notification } from './Notification';
 import { ActionField } from './layouts/ActionField';
 import { AuthField } from './layouts/AuthField';
 import { CommitField } from './layouts/CommitField';
@@ -26,8 +25,8 @@ const StyledContainer = styled(Container)`
 `;
 
 export const App = hot(() => {
-  const { scenarioStore, gitStore } = useContext(StoresContext);
-  useEffect(() => gitStore.extractVariables(), []);
+  const { scenarioStore, formStore } = useContext(StoresContext);
+  useEffect(() => formStore.extractVariables(), []);
   return (
     <>
       <StyledContainer maxWidth="md">
@@ -56,7 +55,6 @@ export const App = hot(() => {
         </Grid>
         <LogHolder />
       </StyledContainer>
-      <Notification />
     </>
   );
 });

@@ -9,16 +9,16 @@ interface EditorProps extends MonacoEditorProps {
   value?: string;
 }
 export const EditorField = ({ value, ...editorProp }: EditorProps) => {
-  const { gitStore } = useContext(StoresContext);
+  const { formStore } = useContext(StoresContext);
   const initialValue =
     value || 'async ({ fsp, vol, repo }) => console.log(vol.toJSON())';
 
   const [data, setData] = useState(initialValue);
 
-  useDebounce(() => gitStore.setActionData(data), 1000, [data]);
+  useDebounce(() => formStore.setActionData(data), 1000, [data]);
   useEffect(() => {
-    gitStore.setActionType('code');
-    gitStore.setActionData(initialValue);
+    formStore.setActionType('code');
+    formStore.setActionData(initialValue);
   }, []);
 
   return (
