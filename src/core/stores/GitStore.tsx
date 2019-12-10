@@ -24,7 +24,6 @@ export class GitStore {
         dir: '/',
         filepath: relative('/', v)
       });
-      console.log('path:', v, ' status:', s);
       if (s !== 'unmodified' && s !== 'ignored') {
         add({ dir: '/', filepath: relative('/', v) });
       }
@@ -68,19 +67,6 @@ export class GitStore {
       files.map(v => (v.includes('.git') ? Promise.resolve() : fn?.(v)))
     );
   }
-  @action
-  test() {
-    const files = Reflect.ownKeys((fs as any).vol.toJSON()) as string[];
-
-    files.map(v =>
-      fs.chmod(v, 0o755, err => {
-        if (err) throw err;
-        console.log(
-          'The permissions for file "my_file.txt" have been changed!'
-        );
-      })
-    );
-  }
   async hasUnstaged() {
     return (await statusMatrix({ dir: '/', pattern: '**/*' })).some(
       v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1
@@ -107,13 +93,6 @@ export class GitStore {
 
   @action
   async push(url: string) {
-    const json = (fs as any).vol.toJSON();
-    Reflect.ownKeys(json).forEach(k => {
-      if ((k as any).startsWith('/.git')) {
-        console.log();
-      }
-    });
-
     const r = await push({
       dir: '/',
       url,
@@ -131,12 +110,5 @@ export class GitStore {
     (fs as any).vol.fromJSON({
       '/': null
     });
-  }
-
-  async status() {
-    const r = await (await statusMatrix({ dir: '/', pattern: '**/*' })).filter(
-      v => v[1] !== 1 || v[2] !== 1 || v[3] !== 1
-    );
-    console.log(r);
   }
 }
