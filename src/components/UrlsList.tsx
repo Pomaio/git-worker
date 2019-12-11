@@ -55,7 +55,7 @@ export const UrlsList = observer(() => {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {urlCollection?.map((v, i) => (
-              <ElementRow
+              <UrlRow
                 delete={v => formStore.deleteUrl(v)}
                 label={v}
                 key={v + i}
@@ -74,7 +74,7 @@ interface RowProps {
   label: string;
 }
 
-const ElementRow = ({ label, ...anyProp }: RowProps) => (
+const UrlRow = ({ label, ...anyProp }: RowProps) => (
   <ListItem button>
     <ListItemText primary={label} />
     <ListItemSecondaryAction>

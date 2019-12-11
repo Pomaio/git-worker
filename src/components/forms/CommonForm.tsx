@@ -1,6 +1,6 @@
 import { TextField } from '@material-ui/core';
 import { TextFieldProps } from '@material-ui/core/TextField/TextField';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 type FormProps = TextFieldProps & { setStoreValue: any; value: any };
 

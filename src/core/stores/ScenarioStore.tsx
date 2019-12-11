@@ -1,6 +1,6 @@
 import { action, observable } from 'mobx';
 import { isAbsolute, join } from 'path';
-import { globMatch, translateVar } from '~/utils';
+import { globMatch } from '~/utils';
 import { getUnvalidFormVar, isValidForm } from '~/utils/validator';
 import { FormStore } from './FormStore';
 import { GitStore } from './GitStore';
