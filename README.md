@@ -1,1 +1,1 @@
-http://devops.pages.ds.local/git-multiplier
+Проект для автоматизации правок в гит проектах
