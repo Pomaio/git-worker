@@ -30,7 +30,7 @@
     "axios": "^0.18.0",
     "fast-glob": "^3.1.0",
     "history": "^4.7.2",
-    "isomorphic-git": "^0.72.0",
+    "isomorphic-git": "^1.8.2",
     "jsonpath": "^1.0.1",
     "keyboardjs": "^2.5.1",
     "lodash-es": "^4.17.11",
