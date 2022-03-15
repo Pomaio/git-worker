@@ -33,7 +33,7 @@
     "isomorphic-git": "^0.72.0",
     "jsonpath": "^1.0.1",
     "keyboardjs": "^2.5.1",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.21",
     "memfs": "^2.16.1",
     "micromatch": "^4.0.2",
     "mobx": "^5.15.0",
